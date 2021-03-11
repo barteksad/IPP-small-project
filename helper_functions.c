@@ -1,8 +1,7 @@
-#pragma once
 #include <stdbool.h> 
 #include "helper_functions.h"
 
-bool isWhitespace (char x) {
+bool isWhitespace (int x) {
     // ' ', '\t', '\n', '\v', '\f', '\r'
     switch (x) {
         case ' ':
