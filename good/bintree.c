@@ -1,3 +1,4 @@
+#pragma once
 #include <stdio.h>
 #include <stdlib.h>
 #include "bintree.h"
@@ -16,20 +17,6 @@ enum WordCompareResult
     EQUAL,
     GREATER
 };
-
-
-typedef struct{  
-    enum DataType data_type;
-    int count;
-    union
-    {
-        long long int intiger;
-        long double floating_point;
-        char *not_a_number;
-    };
-
-} Word;
-
 
 
 struct Node
@@ -138,7 +125,6 @@ void printAll(Tree t)
         }
 }
 
-
 void removeAll(Tree t)
 {
     if(t != NULL)
@@ -147,4 +133,26 @@ void removeAll(Tree t)
         removeAll(t->right);
         free(t);
     }
+}
+
+
+bool checkPresence(Tree t, Word word)
+{
+    enum WordCompareResult compare_result = compareWords(t->stored_word, word);
+
+    if (compare_result == SMALLER)
+        checkPresence(t->right, word);
+    else if (compare_result == GREATER)
+        checkPresence(t->left, word);
+    else
+        return t->stored_word.count == word.count;
+}
+
+bool compareTrees(Tree t1, Tree t2)
+{
+    if (t1 == NULL)
+        return true;
+
+    if (checkPresence(t2, t1->stored_word))
+        return compareTrees(t1->left, t2) && compareTrees(t1->right, t2);
 }
