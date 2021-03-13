@@ -9,15 +9,6 @@ bool _addWord(Row *row, Word word)
     return insert(&row->row_words, word);
 }
 
-void addInt(Row *row, unsigned long long int int_number)
-{
-    Word new_word;
-    new_word.data_type = INTIGER;
-    new_word.intiger = int_number;
-
-    _addWord(row, new_word);
-}
-
 void addFloat(Row *row, long double floating_point)
 {
     Word new_word;

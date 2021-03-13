@@ -38,15 +38,15 @@ liczbę zmiennoprzecinkową, np. 0.25, .33, -1E-1, INF, -INF.
 
 */
 
-bool checkIfIntAndPossiblyAdd(char *word, Row *row, int base)
+bool checkIfOctalAndPossiblyAdd(char *word, Row *row)
 {
     int word_len = strlen(word);
 
     char *endPtr;
-    unsigned long long int possiblyInt = strtoull(word, &endPtr, base);
+    long double possiblyInt = strtoull(word, &endPtr, 8);
     if (endPtr == (word + word_len))
     {
-        addInt(row, possiblyInt);
+        addFloat(row, possiblyInt);
         return true;
     }
     else
@@ -67,14 +67,6 @@ bool checkIfFloatingPointAndPossiblyAdd(char *word, Row *row)
         return false;
 }
 
-bool isOnlyNumeric(char *word)
-{
-    for(int i=0; i < strlen(word); i++)
-        if (word[i] < '0' || word[i] > '9')
-            return false;
-    return true;
-}
-
 bool proceedWord(Row *row, char *word)
 {
     // convert string to lowercase
@@ -85,43 +77,22 @@ bool proceedWord(Row *row, char *word)
     // try to convert it to a numberstr
     // in case of failure it must be not a number
     if (strcmp(word, "nan") == 0 || strcmp(word, "nan") == 0 || strcmp(word, "nan") == 0)
-        {
-            return addNotANumber(row, word);
+        return addNotANumber(row, word);
 
-        }
 
     // if it start with +/- it can be intiger/floating point or not a number
     if (word[0] == '-' || word[0] == '+')
     {
-        if (word[0] == '+')
-            if (!checkIfIntAndPossiblyAdd(word, row, 10))
-                return addNotANumber(row, word);
-        else
-            if (!checkIfFloatingPointAndPossiblyAdd(word, row))
-                return addNotANumber(row, word);
+        if (!checkIfFloatingPointAndPossiblyAdd(word, row))
+            return addNotANumber(row, word);
         return true;
     }
     else if (word[0] == '0')
-    {
-        if (word_len > 2)
-            if (!checkIfIntAndPossiblyAdd(word, row, 8) && word_len > 3)
-                if (checkIfIntAndPossiblyAdd(word, row, 16))
-                    return true;
-        if (checkIfIntAndPossiblyAdd(word, row, 10))
+        if (checkIfOctalAndPossiblyAdd(word, row))
             return true;
-        if (checkIfFloatingPointAndPossiblyAdd(word, row))
-            return true;
+    
+    if (checkIfFloatingPointAndPossiblyAdd(word, row))
+        return true;
+    else 
         return addNotANumber(row, word);
-
-    }
-    else
-    {
-        if (isOnlyNumeric(word))
-            if (checkIfIntAndPossiblyAdd(word, row, 10))
-                return true;
-        else if (checkIfFloatingPointAndPossiblyAdd(word, row))
-            return true;
-        return addNotANumber(row, word);
-
-    }
 }

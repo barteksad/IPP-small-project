@@ -20,18 +20,6 @@ enum WordCompareResult compareWords(Word lhs_word, Word rhs_word)
     if (lhs_word.data_type > rhs_word.data_type)
         return GREATER;
 
-    if (lhs_word.data_type ==  INTIGER)
-    {
-        unsigned long long int lhs_value = lhs_word.intiger;
-        unsigned long long int rhs_value = rhs_word.intiger;
-
-        if (lhs_value < rhs_value)
-            return SMALLER;
-        else if (lhs_value > rhs_value)
-            return GREATER;
-        else
-            return EQUAL;
-    }
     if (lhs_word.data_type ==  FLOATING_POINT)
     {
         long double lhs_value = lhs_word.floating_point;
@@ -95,9 +83,7 @@ void printAll(Tree t)
     if (t != NULL)
         {
             printAll(t->left);
-            if (t->stored_word.data_type == INTIGER)
-                printf("%lld ", t->stored_word.intiger);
-            else if (t->stored_word.data_type == FLOATING_POINT)
+            if (t->stored_word.data_type == FLOATING_POINT)
                 printf("%Lf ", t->stored_word.floating_point);
             else if (t->stored_word.data_type == NOT_A_NUMBER)
                 printf("%s ", t->stored_word.not_a_number);

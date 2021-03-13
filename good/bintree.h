@@ -7,7 +7,6 @@ typedef struct Node* Tree;
 
 enum DataType
 {
-    INTIGER,
     FLOATING_POINT,
     NOT_A_NUMBER
 };
@@ -25,7 +24,6 @@ typedef struct Word
     int count;
     union
     {
-        unsigned long long int intiger;
         long double floating_point;
         char *not_a_number;
     };
