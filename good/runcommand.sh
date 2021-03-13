@@ -1,0 +1,1 @@
+gcc similar_lines.c helper_functions.c helper_functions.h row.c row.h bintree.c bintree.h -o similar_lines.exe -Wall -Wextra -std=c11 -O2

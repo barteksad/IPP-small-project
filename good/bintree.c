@@ -1,22 +1,8 @@
 #pragma once
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "bintree.h"
-
-
-enum DataType
-{
-    INTIGER,
-    FLOATING_POINT,
-    NOT_A_NUMBER
-};
-
-enum WordCompareResult
-{
-    SMALLER,
-    EQUAL,
-    GREATER
-};
 
 
 struct Node
@@ -26,7 +12,7 @@ struct Node
 };
 
 
-short compareWords(Word lhs_word, Word rhs_word)
+enum WordCompareResult compareWords(Word lhs_word, Word rhs_word)
 {   
     // different data types
     if (lhs_word.data_type < rhs_word.data_type)
@@ -63,27 +49,17 @@ short compareWords(Word lhs_word, Word rhs_word)
         char *lhs_value = lhs_word.not_a_number;
         char *rhs_value = rhs_word.not_a_number;
 
-        if (lhs_value < rhs_value)
+        int compare_info = strcmp(lhs_value, rhs_value);
+
+        if (compare_info < 0)
             return SMALLER;
-        else if (lhs_value > rhs_value)
+        else if (compare_info > 0)
             return GREATER;
         else
             return EQUAL;
     }
 
 }   
-
-// Jeśli w drzewie wskazywanym przez treePtr nie występuje wartość x,
-// to zostaje wstawiona.
-void insert(Tree *treePtr, Word word);
-
-// Wypisuje na wyjście wartości przechowywane w drzewie t w porządku rosnącym.
-void printAll(Tree t);
-
-// Usuwa z pamięci drzewo t.
-void removeAll(Tree t);
-
-// ----------
 
 void insert(Tree *treePtr, Word word)
 {
@@ -116,7 +92,7 @@ void printAll(Tree t)
         {
             printAll(t->left);
             if (t->stored_word.data_type == INTIGER)
-                printf("%d ", t->stored_word.intiger);
+                printf("%lld ", t->stored_word.intiger);
             else if (t->stored_word.data_type == FLOATING_POINT)
                 printf("%Lf ", t->stored_word.floating_point);
             else if (t->stored_word.data_type == NOT_A_NUMBER)

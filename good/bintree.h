@@ -19,7 +19,7 @@ enum WordCompareResult
     GREATER
 };
 
-typedef struct
+typedef struct Word
 {  
     enum DataType data_type;
     int count;
@@ -35,7 +35,7 @@ typedef struct
 
 
 
-short compareWords(Word lhs_word, Word rhs_word);
+enum WordCompareResult compareWords(Word lhs_word, Word rhs_word);
 
 void insert(Tree *treePtr, Word word);
 
