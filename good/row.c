@@ -3,13 +3,13 @@
 #include "row.h"
 
 
-void _addWord(Row *row, Word word)
+bool _addWord(Row *row, Word word)
 {
-    insert(&row->row_words, word);
     row->num_elements += 1;
+    return insert(&row->row_words, word);
 }
 
-void addInt(Row *row, long long int int_number)
+void addInt(Row *row, unsigned long long int int_number)
 {
     Word new_word;
     new_word.data_type = INTIGER;
@@ -27,13 +27,12 @@ void addFloat(Row *row, long double floating_point)
     _addWord(row, new_word);
 }
 
-void addNotANumber(Row *row, char *not_a_number)
+bool addNotANumber(Row *row, char *not_a_number)
 {
     Word new_word;
     new_word.data_type = NOT_A_NUMBER;
     new_word.not_a_number = not_a_number;
-
-    _addWord(row, new_word);
+    return _addWord(row, new_word);
 }
 
 bool compareTwoRows(Row row1, Row row2)

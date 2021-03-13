@@ -3,8 +3,10 @@
 // checks if x is a whitespace character
 bool isWhitespace (int x);
 
-void proceedWord(Row *row, char *word);
+bool proceedWord(Row *row, char *word);
 
 bool checkIfIntAndPossiblyAdd(char *word, Row *row, int base);
 
 bool checkIfFloatingPointAndPossiblyAdd(char *word, Row *row);
+
+bool isOnlyNumeric(char *word);

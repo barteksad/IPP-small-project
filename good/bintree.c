@@ -22,8 +22,8 @@ enum WordCompareResult compareWords(Word lhs_word, Word rhs_word)
 
     if (lhs_word.data_type ==  INTIGER)
     {
-        long long int lhs_value = lhs_word.intiger;
-        long long int rhs_value = rhs_word.intiger;
+        unsigned long long int lhs_value = lhs_word.intiger;
+        unsigned long long int rhs_value = rhs_word.intiger;
 
         if (lhs_value < rhs_value)
             return SMALLER;
@@ -61,7 +61,7 @@ enum WordCompareResult compareWords(Word lhs_word, Word rhs_word)
 
 }   
 
-void insert(Tree *treePtr, Word word)
+bool insert(Tree *treePtr, Word word)
 {
     if (*treePtr == NULL)
     {
@@ -73,17 +73,21 @@ void insert(Tree *treePtr, Word word)
         temp->left = NULL;
         temp->right = NULL; 
         *treePtr = temp;
+        return false;
     }
 
     // how is left compared to right
     enum WordCompareResult compare_result = compareWords((*treePtr)->stored_word, word);
 
     if (compare_result == SMALLER)
-        insert(&((*treePtr)->right), word);
+        return insert(&((*treePtr)->right), word);
     else if (compare_result == GREATER)
-        insert(&((*treePtr)->left), word);
+        return insert(&((*treePtr)->left), word);
     else
+    {
         (*treePtr)->stored_word.count += 1;
+        return true;
+    }
 }
 
 void printAll(Tree t)

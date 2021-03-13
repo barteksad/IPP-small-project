@@ -9,7 +9,8 @@
 
 
 
-int main() {
+int main() 
+{
     int current_input, previous_input = ' ';
     unsigned int row_number = 0;
 
@@ -19,13 +20,12 @@ int main() {
     row->num_elements = 0;
     row->row_words = NULL;
 
-    while((current_input = getc(stdin)) != EOF) 
+    while(true) 
     {
-        // printf("\n'%c'-current input, '%c'-prev input\n", (char)current_input,(char)previous_input);
-
+        current_input = getc(stdin);
         // check if comment or invalid row :
         // either contains '#' or ascii character not in range [33, 126]
-        if ((current_input == '#' || current_input < 33 || current_input > 126) && (!isWhitespace(current_input)))
+        if ((current_input == '#' || current_input < 33 || current_input > 126) && (!isWhitespace(current_input) && (current_input != EOF)))
         {
             row_number += 1;
             printf("Invalid row! %d, %c", current_input, (char)current_input);
@@ -50,17 +50,17 @@ int main() {
             // if previous character wasn't a whitespace, there is new word to proceed
             if (!isWhitespace(previous_input))
             {
-                proceedWord(row, word);
-                previous_input = current_input;
-                free(word);
+                if (proceedWord(row, word))
+                    free(word);
                 word = (char *)malloc(1);
-                word[0] = '\0';
+                word[0] = '\0';                      
+                previous_input = current_input;
             }
 
             continue;
         }
         
-        if(!isWhitespace(current_input))
+        if(!isWhitespace(current_input) && current_input != EOF)
         {
             size_t len = strlen(word);
             word = (char*)realloc(word, len + 1);
@@ -72,31 +72,34 @@ int main() {
 
             continue;
         }
-        if (current_input == '\n') 
+        if (current_input == '\n' ||  current_input == EOF) 
         {
             row_number += 1;
             if (!isWhitespace(previous_input))
             {
-                proceedWord(row, word);       
+                if (proceedWord(row, word))
+                    free(word);
+                word = (char *)malloc(1);
+                word[0] = '\0'; 
             }
-            /*
-            TODO process all row
-            */
+
             printf("\nrow number : %d \n", row_number);
-            printf("%d\n", row->num_elements);
+            // printf("%d\n", row->num_elements);
             printAll(row->row_words);
             removeAll(row->row_words);
-            free(word);
-            word = (char *)malloc(1);
-            word[0] = '\0';
             free(row);
             row = (Row*)malloc(sizeof(Row));
             row->num_elements = 0;
             row->row_words = NULL;
             previous_input = ' ';
+
+            if (current_input == EOF)
+                break;
         }
     }
-    
+
     free(word);
     free(row);
+
+    exit(EXIT_SUCCESS);
 }

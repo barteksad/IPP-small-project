@@ -7,13 +7,13 @@ typedef struct Row
     unsigned int num_elements;
 } Row;
 
-void _addWord(Row *row, Word word);
+bool _addWord(Row *row, Word word);
 
-void addInt(Row *row, long long int int_number);
+void addInt(Row *row, unsigned long long int int_number);
 
 void addFloat(Row *row, long double floating_point);
 
-void addNotANumber(Row *row, char *not_a_number);
+bool addNotANumber(Row *row, char *not_a_number);
 
 
 bool compareTwoRows(Row row1, Row row2);

@@ -25,7 +25,7 @@ typedef struct Word
     int count;
     union
     {
-        long long int intiger;
+        unsigned long long int intiger;
         long double floating_point;
         char *not_a_number;
     };
@@ -37,7 +37,7 @@ typedef struct Word
 
 enum WordCompareResult compareWords(Word lhs_word, Word rhs_word);
 
-void insert(Tree *treePtr, Word word);
+bool insert(Tree *treePtr, Word word);
 
 void printAll(Tree t);
 
