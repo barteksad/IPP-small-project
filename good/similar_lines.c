@@ -4,13 +4,18 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include "helper_functions.h"
+#include "row.h"
 
 
 
 int main() {
     int current_input, previous_input = ' ';
     unsigned int row_number = 0;
+
     char *word = "";
+    Row *row;
+    row->num_elements = 0;
+    row->row_words = NULL;
 
     while((current_input = getc(stdin)) != EOF) 
     {
@@ -23,6 +28,11 @@ int main() {
             while((current_input = getc(stdin)) != EOF)
                 if (current_input == '\n')
                     break;
+
+            removeAll(row->row_words);
+            row->num_elements = 0;
+            row->row_words = NULL;
+            free(word);
         }   
 
         if (isWhitespace(current_input))
@@ -30,13 +40,9 @@ int main() {
             // if previous character was also a whitespace nothing to do
             // if previous character wasn't a whitespace, there is new word to proceed
             if (!isWhitespace(previous_input))
-            /*
-            # TODO
-            ****
-            */
+                proceedWord(word, row);
             previous_input = current_input;
             free(word);
-            word = "";
         }
         else
         {
@@ -58,9 +64,16 @@ int main() {
         {
             row_number += 1;
             if (!isWhitespace(previous_input))
-                proceedWord(word);
-
+                proceedWord(word, row);
             
+            /*
+            TODO process all row
+            */
+
+            removeAll(row->row_words);
+            row->num_elements = 0;
+            row->row_words = NULL;
+            free(word);
             // printf("\nrow number : %d \n", row_number);
         }
     }

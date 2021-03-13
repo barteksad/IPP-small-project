@@ -37,7 +37,7 @@ liczbę zmiennoprzecinkową, np. 0.25, .33, -1E-1, INF, -INF.
 
 */
 
-void proceedWord(char *word)
+void proceedWord(char *word, Row *row)
 {
     // convert string to lowercase
     for(int i = 0; word[i]; i++){
