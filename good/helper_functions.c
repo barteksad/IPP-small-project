@@ -38,11 +38,13 @@ liczbę zmiennoprzecinkową, np. 0.25, .33, -1E-1, INF, -INF.
 
 */
 
-bool checkIfIntAndPossiblyAdd(char *word, Row *row, int base, int word_len)
+bool checkIfIntAndPossiblyAdd(char *word, Row *row, int base)
 {
+    int word_len = strlen(word);
+
     char *endPtr;
     long long int possiblyInt = strtoll(word, &endPtr, base);
-    if (endPtr == word + word_len)
+    if (endPtr == (word + word_len))
     {
         addInt(row, possiblyInt);
         return true;
@@ -51,8 +53,9 @@ bool checkIfIntAndPossiblyAdd(char *word, Row *row, int base, int word_len)
         return false;
 }
 
-bool checkIfFloatingPointAndPossiblyAdd(char *word, Row *row, int word_len)
+bool checkIfFloatingPointAndPossiblyAdd(char *word, Row *row)
 {
+    int word_len = strlen(word);
     char *endPtr;
     long double possiblyFloat = strtold(word, &endPtr);
     if (endPtr == word + word_len)
@@ -64,26 +67,27 @@ bool checkIfFloatingPointAndPossiblyAdd(char *word, Row *row, int word_len)
         return false;
 }
 
+
 void proceedWord(Row *row, char *word)
 {
     // convert string to lowercase
     for(int i = 0; word[i]; i++){
         word[i] = tolower(word[i]);
     }
-    size_t word_len = strlen(word);
-
+    int word_len = strlen(word);
     // try to convert it to a numberstr
     // in case of failure it must be not a number
 
     // if it start with +/- it can be intiger/floating point or not a number
     if (word[0] == '-' || word[0] == '+')
     {
+
         if (strcmp(word, "nan") == 0 || strcmp(word, "nan") == 0 || strcmp(word, "nan") == 0)
             addNotANumber(row, word);
         else
         {
-            if (!checkIfFloatingPointAndPossiblyAdd(word, row, word_len))
-            if (!checkIfIntAndPossiblyAdd(word, row, word_len, 10))
+            if (!checkIfFloatingPointAndPossiblyAdd(word, row))
+            if (!checkIfIntAndPossiblyAdd(word, row, 10))
                 addNotANumber(row, word);
         }
         return;
@@ -91,21 +95,21 @@ void proceedWord(Row *row, char *word)
     else if (word[0] == '0')
     {
         if (word_len > 2)
-            if (!checkIfIntAndPossiblyAdd(word, row, word_len, 8) && word_len > 3)
-                if (checkIfIntAndPossiblyAdd(word, row, word_len, 16))
+            if (!checkIfIntAndPossiblyAdd(word, row, 8) && word_len > 3)
+                if (checkIfIntAndPossiblyAdd(word, row, 16))
                     return;
-        if (!checkIfIntAndPossiblyAdd(word, row, word_len, 10))
+        if (checkIfIntAndPossiblyAdd(word, row, 10))
             return;
-        if (!checkIfFloatingPointAndPossiblyAdd(word, row, word_len))
+        if (checkIfFloatingPointAndPossiblyAdd(word, row))
             return;
         addNotANumber(row, word);
         return;
     }
     else
     {
-        if (!checkIfIntAndPossiblyAdd(word, row, word_len, 10))
+        if (checkIfIntAndPossiblyAdd(word, row, 10))
             return;
-        if (!checkIfFloatingPointAndPossiblyAdd(word, row, word_len))
+        if (checkIfFloatingPointAndPossiblyAdd(word, row))
             return;
         addNotANumber(row, word);
         return;

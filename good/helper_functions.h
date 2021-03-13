@@ -5,6 +5,6 @@ bool isWhitespace (int x);
 
 void proceedWord(Row *row, char *word);
 
-bool checkIfIntAndPossiblyAdd(char *word, Row *row, int base, int word_len);
+bool checkIfIntAndPossiblyAdd(char *word, Row *row, int base);
 
-bool checkIfFloatingPointAndPossiblyAdd(char *word, Row *row, int word_len);
+bool checkIfFloatingPointAndPossiblyAdd(char *word, Row *row);

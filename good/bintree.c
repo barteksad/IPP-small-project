@@ -107,6 +107,8 @@ void removeAll(Tree t)
     {
         removeAll(t->left);
         removeAll(t->right);
+        if (t->stored_word.data_type == NOT_A_NUMBER)
+            free(t->stored_word.not_a_number);
         free(t);
     }
 }
