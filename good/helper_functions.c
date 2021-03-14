@@ -73,7 +73,6 @@ bool proceedWord(Row *row, char *word)
     for(int i = 0; word[i]; i++){
         word[i] = tolower(word[i]);
     }
-    int word_len = strlen(word);
     // try to convert it to a numberstr
     // in case of failure it must be not a number
     if (strcmp(word, "nan") == 0 || strcmp(word, "nan") == 0 || strcmp(word, "nan") == 0)

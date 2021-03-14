@@ -6,16 +6,18 @@
 #include <malloc.h>
 #include "helper_functions.h"
 #include "row.h"
-
+#include "row_counter.h"
 
 
 int main() 
 {
     int current_input, previous_input = ' ';
     unsigned int row_number = 0;
+    RowTree row_counter = NULL;
 
     char * word = (char *)malloc(1);
     word[0] = '\0';
+
     Row *row = (Row*)malloc(sizeof(Row));
     row->num_elements = 0;
     row->row_words = NULL;
@@ -28,12 +30,12 @@ int main()
         if ((current_input == '#' || current_input < 33 || current_input > 126) && (!isWhitespace(current_input) && (current_input != EOF)))
         {
             row_number += 1;
-            printf("Invalid row! %d, %c", current_input, (char)current_input);
+            // printf("Invalid row! %d, %c", current_input, (char)current_input);
             while((current_input = getc(stdin)) != EOF)
                 if (current_input == '\n')
                     break;
 
-            removeAll(row->row_words);
+            removeAllWordTree(row->row_words);
             row->num_elements = 0;
             row->row_words = NULL;
             free(word);
@@ -82,24 +84,32 @@ int main()
                 word = (char *)malloc(1);
                 word[0] = '\0'; 
             }
-
-            printf("\nrow number : %d \n", row_number);
+            
+            // printf("\n\n%d\n\n", compareTreesWordTree(row->row_words, row->row_words));
             // printf("%d\n", row->num_elements);
-            printAll(row->row_words);
-            removeAll(row->row_words);
-            free(row);
+            // printAllWordTree(row->row_words);
+            if (insertRowTree(&row_counter, row, row_number))
+            {
+                removeAllWordTree(row->row_words);
+                free(row);
+            }
+
             row = (Row*)malloc(sizeof(Row));
             row->num_elements = 0;
             row->row_words = NULL;
             previous_input = ' ';
+            printf("\nrow number : %d \n", row_number);
 
             if (current_input == EOF)
                 break;
         }
     }
-
     free(word);
     free(row);
+
+    removeAllRowTree(row_counter);
+
+    // free(row_counter);
 
     exit(EXIT_SUCCESS);
 }

@@ -8,5 +8,3 @@ bool proceedWord(Row *row, char *word);
 bool checkIfOctalAndPossiblyAdd(char *word, Row *row);
 
 bool checkIfFloatingPointAndPossiblyAdd(char *word, Row *row);
-
-bool isOnlyNumeric(char *word);

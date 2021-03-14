@@ -5,22 +5,22 @@
 #include "bintree.h"
 
 
-struct Node
+struct WordNode
 {
     Word stored_word;
-    Tree left, right;
+    WordTree left, right;
 };
 
 
-enum WordCompareResult compareWords(Word lhs_word, Word rhs_word)
+enum CompareResult compareWords(Word lhs_word, Word rhs_word)
 {   
     // different data types
     if (lhs_word.data_type < rhs_word.data_type)
         return SMALLER;
-    if (lhs_word.data_type > rhs_word.data_type)
+    else if (lhs_word.data_type > rhs_word.data_type)
         return GREATER;
 
-    if (lhs_word.data_type ==  FLOATING_POINT)
+    else if (lhs_word.data_type ==  FLOATING_POINT)
     {
         long double lhs_value = lhs_word.floating_point;
         long double rhs_value = rhs_word.floating_point;
@@ -32,7 +32,8 @@ enum WordCompareResult compareWords(Word lhs_word, Word rhs_word)
         else
             return EQUAL;
     }
-    if (lhs_word.data_type ==  NOT_A_NUMBER)
+    else
+    // else (lhs_word.data_type ==  NOT_A_NUMBER)
     {
         char *lhs_value = lhs_word.not_a_number;
         char *rhs_value = rhs_word.not_a_number;
@@ -49,28 +50,27 @@ enum WordCompareResult compareWords(Word lhs_word, Word rhs_word)
 
 }   
 
-bool insert(Tree *treePtr, Word word)
+bool insertWordTree(WordTree *treePtr, Word word)
 {
     if (*treePtr == NULL)
     {
-        Tree temp = (Tree)malloc(sizeof(struct Node));
+        *treePtr = (WordTree)malloc(sizeof(struct WordNode));
         // memory error
-        if (temp == NULL)
+        if (*treePtr == NULL)
             exit(EXIT_FAILURE);
-        temp->stored_word = word;
-        temp->left = NULL;
-        temp->right = NULL; 
-        *treePtr = temp;
+        (*treePtr)->stored_word = word;
+        (*treePtr)->left = NULL;
+        (*treePtr)->right = NULL; 
         return false;
     }
 
     // how is left compared to right
-    enum WordCompareResult compare_result = compareWords((*treePtr)->stored_word, word);
+    enum CompareResult compare_result = compareWords((*treePtr)->stored_word, word);
 
     if (compare_result == SMALLER)
-        return insert(&((*treePtr)->right), word);
+        return insertWordTree(&((*treePtr)->right), word);
     else if (compare_result == GREATER)
-        return insert(&((*treePtr)->left), word);
+        return insertWordTree(&((*treePtr)->left), word);
     else
     {
         (*treePtr)->stored_word.count += 1;
@@ -78,25 +78,25 @@ bool insert(Tree *treePtr, Word word)
     }
 }
 
-void printAll(Tree t)
+void printAllWordTree(WordTree t)
 {
     if (t != NULL)
         {
-            printAll(t->left);
+            printAllWordTree(t->left);
             if (t->stored_word.data_type == FLOATING_POINT)
                 printf("%Lf ", t->stored_word.floating_point);
             else if (t->stored_word.data_type == NOT_A_NUMBER)
                 printf("%s ", t->stored_word.not_a_number);
-            printAll(t->right);
+            printAllWordTree(t->right);
         }
 }
 
-void removeAll(Tree t)
+void removeAllWordTree(WordTree t)
 {
     if(t != NULL)
     {
-        removeAll(t->left);
-        removeAll(t->right);
+        removeAllWordTree(t->left);
+        removeAllWordTree(t->right);
         if (t->stored_word.data_type == NOT_A_NUMBER)
             free(t->stored_word.not_a_number);
         free(t);
@@ -104,23 +104,42 @@ void removeAll(Tree t)
 }
 
 
-bool checkPresence(Tree t, Word word)
+int goDFSWordTree(WordTree t, Word *words[], int current_num)
 {
-    enum WordCompareResult compare_result = compareWords(t->stored_word, word);
-
-    if (compare_result == SMALLER)
-        checkPresence(t->right, word);
-    else if (compare_result == GREATER)
-        checkPresence(t->left, word);
+    if (t != NULL)
+    {
+        int this_num = goDFSWordTree(t->left, words, current_num);
+        *(words + this_num) = &t->stored_word;
+        return goDFSWordTree(t->right, words, this_num + 1);
+    }
     else
-        return t->stored_word.count == word.count;
+        return current_num;
 }
 
-bool compareTrees(Tree t1, Tree t2)
-{
-    if (t1 == NULL)
-        return true;
 
-    if (checkPresence(t2, t1->stored_word))
-        return compareTrees(t1->left, t2) && compareTrees(t1->right, t2);
+enum CompareResult compareTreesWordTree(WordTree t1, WordTree t2)
+{
+    size_t num_elements_in_each_tree;
+
+    Word **t1_words = malloc(num_elements_in_each_tree * sizeof(Word*));
+    Word **t2_words = malloc(num_elements_in_each_tree * sizeof(Word*));
+
+    goDFSWordTree(t1, t1_words, 0);
+    goDFSWordTree(t2, t2_words, 0);
+
+    for(int i = 0; i < num_elements_in_each_tree; i++)
+    {
+        enum CompareResult word_compare_result = compareWords(*t1_words[i], *t2_words[i]);
+
+        if (word_compare_result == EQUAL)
+            continue;
+        else
+        {
+            free(t1_words);
+            free(t2_words);
+            return word_compare_result;
+        }
+    }
+
+    return EQUAL;
 }

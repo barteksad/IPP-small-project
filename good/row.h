@@ -3,16 +3,15 @@
 
 typedef struct Row
 {
-    Tree row_words;
+    WordTree row_words;
     unsigned int num_elements;
 } Row;
 
-bool _addWord(Row *row, Word word);
+bool addWord(Row *row, Word word);
 
 void addFloat(Row *row, long double floating_point);
 
 bool addNotANumber(Row *row, char *not_a_number);
 
-
-bool compareTwoRows(Row row1, Row row2);
+enum CompareResult compareTwoRows(Row row1, Row row2);
 

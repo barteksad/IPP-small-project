@@ -1,9 +1,9 @@
 #pragma once
 #include <stdbool.h> 
 
-struct Node;
+struct WordNode;
 
-typedef struct Node* Tree;
+typedef struct WordNode* WordTree;
 
 enum DataType
 {
@@ -11,7 +11,7 @@ enum DataType
     NOT_A_NUMBER
 };
 
-enum WordCompareResult
+enum CompareResult
 {
     SMALLER,
     EQUAL,
@@ -33,17 +33,18 @@ typedef struct Word
 
 
 
-enum WordCompareResult compareWords(Word lhs_word, Word rhs_word);
+enum CompareResult compareWords(Word lhs_word, Word rhs_word);
 
-bool insert(Tree *treePtr, Word word);
+bool insertWordTree(WordTree *treePtr, Word word);
 
-void printAll(Tree t);
+void printAllWordTree(WordTree t);
 
-void removeAll(Tree t);
+void removeAllWordTree(WordTree t);
 
-bool checkPresence(Tree t, Word word);
+int goDFSWordTree(WordTree t, Word *words[], int current_num);
 
-bool compareTrees(Tree t1, Tree t2);
+enum CompareResult compareTreesWordTree(WordTree t1, WordTree t2);
+
 
 
 
