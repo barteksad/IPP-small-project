@@ -47,6 +47,7 @@ bool checkIfOctalAndPossiblyAdd(char *word, Row *row)
     if (endPtr == (word + word_len))
     {
         addFloat(row, possiblyInt);
+        // printf("%Lf ", possiblyInt);
         return true;
     }
     else
@@ -61,6 +62,7 @@ bool checkIfFloatingPointAndPossiblyAdd(char *word, Row *row)
     if (endPtr == word + word_len)
     {
         addFloat(row, possiblyFloat);
+        // printf("%Lf ", possiblyFloat);
         return true;
     }
     else

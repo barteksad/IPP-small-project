@@ -31,8 +31,6 @@ typedef struct Word
 } Word;
 
 
-
-
 enum CompareResult compareWords(Word lhs_word, Word rhs_word);
 
 bool insertWordTree(WordTree *treePtr, Word word);
@@ -43,7 +41,7 @@ void removeAllWordTree(WordTree t);
 
 int goDFSWordTree(WordTree t, Word *words[], int current_num);
 
-enum CompareResult compareTreesWordTree(WordTree t1, WordTree t2);
+enum CompareResult compareTreesWordTree(WordTree t1, WordTree t2, int num_elements_in_each_tree);
 
 
 

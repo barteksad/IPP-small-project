@@ -5,6 +5,7 @@ typedef struct Row
 {
     WordTree row_words;
     unsigned int num_elements;
+    unsigned int num_unique_elements;
 } Row;
 
 bool addWord(Row *row, Word word);

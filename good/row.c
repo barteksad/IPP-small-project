@@ -6,15 +6,20 @@
 bool addWord(Row *row, Word word)
 {
     row->num_elements += 1;
-    return insertWordTree(&row->row_words, word);
+    bool if_already_exsists = insertWordTree(&row->row_words, word);
+    if (!if_already_exsists)
+        row->num_unique_elements += 1;
+    
+    return if_already_exsists;
 }
 
 void addFloat(Row *row, long double floating_point)
 {
     Word new_word;
+    // printf("%Lf ", new_word.floating_point);
     new_word.data_type = FLOATING_POINT;
     new_word.floating_point = floating_point;
-
+    // printf("%Lf ", new_word.floating_point);
     addWord(row, new_word);
 }
 
@@ -28,8 +33,13 @@ bool addNotANumber(Row *row, char *not_a_number)
 
 enum CompareResult compareTwoRows(Row row1, Row row2)
 {
-    if (row1.num_elements != row2.num_elements)
-        return false;
+    if (row1.num_elements < row2.num_elements || row1.num_unique_elements < row2.num_unique_elements)
+        return SMALLER;
+    else if (row1.num_elements > row2.num_elements || row1.num_unique_elements > row2.num_unique_elements)
+        return GREATER;
     else
-        return compareTreesWordTree(row1.row_words, row2.row_words);
+    {
+        // printf("Comparing %d %d %d %d\n", row1.num_elements, row2.num_elements, row1.num_unique_elements, row2.num_unique_elements);
+        return compareTreesWordTree(row1.row_words, row2.row_words, row2.num_unique_elements);
+    }
 }

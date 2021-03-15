@@ -30,7 +30,14 @@ enum CompareResult compareWords(Word lhs_word, Word rhs_word)
         else if (lhs_value > rhs_value)
             return GREATER;
         else
-            return EQUAL;
+            {
+                if (lhs_word.count < rhs_word.count)
+                    return SMALLER;
+                else if (lhs_word.count > rhs_word.count)    
+                    return GREATER;
+                else    
+                    return EQUAL;
+            }
     }
     else
     // else (lhs_word.data_type ==  NOT_A_NUMBER)
@@ -45,7 +52,14 @@ enum CompareResult compareWords(Word lhs_word, Word rhs_word)
         else if (compare_info > 0)
             return GREATER;
         else
-            return EQUAL;
+            {
+                if (lhs_word.count < rhs_word.count)
+                    return SMALLER;
+                else if (lhs_word.count > rhs_word.count)    
+                    return GREATER;
+                else    
+                    return EQUAL;
+            }
     }
 
 }   
@@ -59,8 +73,11 @@ bool insertWordTree(WordTree *treePtr, Word word)
         if (*treePtr == NULL)
             exit(EXIT_FAILURE);
         (*treePtr)->stored_word = word;
+        (*treePtr)->stored_word.count = 1;
         (*treePtr)->left = NULL;
-        (*treePtr)->right = NULL; 
+        (*treePtr)->right = NULL;
+        // printf("%Lf ", word.floating_point);
+ 
         return false;
     }
 
@@ -117,10 +134,8 @@ int goDFSWordTree(WordTree t, Word *words[], int current_num)
 }
 
 
-enum CompareResult compareTreesWordTree(WordTree t1, WordTree t2)
+enum CompareResult compareTreesWordTree(WordTree t1, WordTree t2, int num_elements_in_each_tree)
 {
-    size_t num_elements_in_each_tree;
-
     Word **t1_words = malloc(num_elements_in_each_tree * sizeof(Word*));
     Word **t2_words = malloc(num_elements_in_each_tree * sizeof(Word*));
 
@@ -129,7 +144,10 @@ enum CompareResult compareTreesWordTree(WordTree t1, WordTree t2)
 
     for(int i = 0; i < num_elements_in_each_tree; i++)
     {
+        // printf("---%s %s\n", t1_words[i], t2_words[i]);
         enum CompareResult word_compare_result = compareWords(*t1_words[i], *t2_words[i]);
+        printf("%Lf %Lf %d\n", t1_words[i]->floating_point, t2_words[i]->floating_point, word_compare_result);
+        printf("%d\n", t1_words[i]->floating_point == t2_words[i]->floating_point);
 
         if (word_compare_result == EQUAL)
             continue;
@@ -140,6 +158,6 @@ enum CompareResult compareTreesWordTree(WordTree t1, WordTree t2)
             return word_compare_result;
         }
     }
-
+    printf("EQUAL\n");
     return EQUAL;
 }
