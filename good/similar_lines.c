@@ -11,7 +11,7 @@
 
 int main() 
 {
-    int current_input, previous_input = ' ';
+    int current_input, previous_input = '\n';
     unsigned int row_number = 0;
     RowTree row_counter = NULL;
     char * word = (char *)malloc(1);
@@ -27,7 +27,7 @@ int main()
         current_input = getc(stdin);
         // check if comment or invalid row :
         // either contains '#' or ascii character not in range [33, 126]
-        if ((current_input == '#' || current_input < 33 || current_input > 126) && (!isWhitespace(current_input) && (current_input != EOF)))
+        if (((current_input == '#' && previous_input == '\n') || current_input < 33 || current_input > 126) && (!isWhitespace(current_input) && (current_input != EOF)))
         {
             row_number += 1;
             if (current_input != '#')
@@ -44,7 +44,7 @@ int main()
             free(word);
             word = (char *)malloc(1);
             word[0] = '\0';
-            previous_input = ' ';
+            previous_input = '\n';
 
             continue;
         }
@@ -59,9 +59,8 @@ int main()
                     free(word);
                 word = (char *)malloc(1);
                 word[0] = '\0';                      
-                previous_input = current_input;
             }
-
+            previous_input = current_input;
             continue;
         }
         
@@ -102,7 +101,7 @@ int main()
     
                 row->row_words = NULL;
             }
-            previous_input = ' ';
+            previous_input = '\n';
             if (current_input == EOF)
                     break;
         }

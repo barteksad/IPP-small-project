@@ -17,7 +17,7 @@ bool isWhitespace (int x) {
             return true;
         case '\f':
             return true;
-        case 'r':
+        case '\r':
             return true;
         default:
             return false;
@@ -63,6 +63,11 @@ bool proceedWord(Row *row, char *word)
     // in case of failure it must be not a number
     if (strcmp(word, "nan") == 0 || strcmp(word, "nan") == 0 || strcmp(word, "nan") == 0)
         return addNotANumber(row, word);
+    if (strcmp(word, "0x") == 0)
+    {
+        addFloat(row, (long double)0);
+        return true;
+    }
 
 
     // if it start with +/- it can be intiger/floating point or not a number
