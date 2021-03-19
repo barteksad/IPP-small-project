@@ -16,10 +16,8 @@ bool addWord(Row *row, Word word)
 void addFloat(Row *row, long double floating_point)
 {
     Word new_word;
-    // printf("%Lf ", new_word.floating_point);
     new_word.data_type = FLOATING_POINT;
     new_word.floating_point = floating_point;
-    // printf("%Lf ", new_word.floating_point);
     addWord(row, new_word);
 }
 
@@ -39,7 +37,6 @@ enum CompareResult compareTwoRows(Row row1, Row row2)
         return GREATER;
     else
     {
-        // printf("Comparing %d %d %d %d\n", row1.num_elements, row2.num_elements, row1.num_unique_elements, row2.num_unique_elements);
         return compareTreesWordTree(row1.row_words, row2.row_words, row2.num_unique_elements);
     }
 }

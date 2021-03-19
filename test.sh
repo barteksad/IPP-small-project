@@ -1,0 +1,1 @@
+"./good/similar_lines" < "example/example.in"

@@ -24,30 +24,15 @@ bool isWhitespace (int x) {
     }
 }
 
-/*
-
-printf("%llu\n", strtoull(word, &endPtr,10));
-printf("%d %ld %ld %ld", strlen(word), word, word + strlen(word), endPtr);
-
-
-liczbę całkowitą zapisaną dziesiętnie (rozpoznawane wartości z przedziału przynajmniej od -9223372036854775808 do 18446744073709551615), np. 42, -1, 09, +2, 0, -0, +0, -02;
-liczbę całkowitą nieujemną zapisaną szesnastkowo (rozpoznawane wartości przynajmniej do 18446744073709551615), np. 0X0001, 0XABC;
-liczbę całkowitą nieujemną zapisaną ósemkowo (rozpoznawane wartości przynajmniej do 18446744073709551615), np. 0177, 0001;
-liczbę zmiennoprzecinkową, np. 0.25, .33, -1E-1, INF, -INF.
-
-
-*/
-
 bool checkIfOctalAndPossiblyAdd(char *word, Row *row)
 {
     int word_len = strlen(word);
 
     char *endPtr;
-    long double possiblyInt = strtoull(word, &endPtr, 8);
+    long double possiblyInt = (long double)strtoull(word, &endPtr, 8);
     if (endPtr == (word + word_len))
     {
         addFloat(row, possiblyInt);
-        // printf("%Lf ", possiblyInt);
         return true;
     }
     else
@@ -62,7 +47,6 @@ bool checkIfFloatingPointAndPossiblyAdd(char *word, Row *row)
     if (endPtr == word + word_len)
     {
         addFloat(row, possiblyFloat);
-        // printf("%Lf ", possiblyFloat);
         return true;
     }
     else

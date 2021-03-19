@@ -18,8 +18,6 @@ int main()
     word[0] = '\0';
 
     Row *row = (Row *)malloc(sizeof(Row));
-    printf("\n init row ptr: %lld\n", row);
-
     row->num_elements = 0;
     row->num_unique_elements = 0;
     row->row_words = NULL;
@@ -40,9 +38,9 @@ int main()
                     break;
 
             removeAllWordTree(row->row_words);
+            row->row_words = NULL;
             row->num_elements = 0;
             row->num_unique_elements = 0;
-            row->row_words = NULL;
             free(word);
             word = (char *)malloc(1);
             word[0] = '\0';
@@ -70,7 +68,7 @@ int main()
         if(!isWhitespace(current_input) && current_input != EOF)
         {
             size_t len = strlen(word);
-            word = (char*)realloc(word, len + 1);
+            word = (char*)realloc(word, len + 2);
             if (word == NULL)
                 exit(EXIT_FAILURE);
             word[len] = (char)current_input;
@@ -89,36 +87,30 @@ int main()
                 word = (char *)malloc(1);
                 word[0] = '\0'; 
             }
-            
-            // printf("\n\n%d\n\n", compareTreesWordTree(row->row_words, row->row_words));
-            // printf("%d\n", row->num_elements);
-            // printAllWordTree(row->row_words);
-            printf("\nrow number : %d \n", row_number);
+
             if (row->num_elements > 0)
-                if (insertRowTree(&row_counter, row, row_number))
-                {
-                    removeAllWordTree(row->row_words);
-                    free(row);
-                }
-            row = (Row *)malloc(sizeof(Row));
-            row->num_elements = 0;
-            row->num_unique_elements = 0;
-
-            row->row_words = NULL;
+            {
+                
+                    if (insertRowTree(&row_counter, row, row_number))
+                    {
+                        removeAllWordTree(row->row_words);
+                        free(row);
+                    }
+                row = (Row *)malloc(sizeof(Row));
+                row->num_elements = 0;
+                row->num_unique_elements = 0;
+    
+                row->row_words = NULL;
+            }
             previous_input = ' ';
-
             if (current_input == EOF)
-                break;
+                    break;
         }
     }
     printRows(row_counter);
+    removeAllRowTree(row_counter);
     free(word);
     free(row);
-
-
-    removeAllRowTree(row_counter);
-
-    // free(row_counter);
 
     exit(EXIT_SUCCESS);
 }

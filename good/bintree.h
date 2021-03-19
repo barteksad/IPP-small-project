@@ -31,7 +31,7 @@ typedef struct Word
 } Word;
 
 
-enum CompareResult compareWords(Word lhs_word, Word rhs_word);
+enum CompareResult compareWords(Word lhs_word, Word rhs_word, bool check_count);
 
 bool insertWordTree(WordTree *treePtr, Word word);
 
