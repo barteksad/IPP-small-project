@@ -6,11 +6,11 @@
 bool addWord(Row *row, Word word)
 {
     row->num_elements += 1;
-    bool if_already_exsists = insertWordTree(&row->row_words, word);
-    if (!if_already_exsists)
+    bool if_new = insertWordTree(&row->row_words, word);
+    if (if_new)
         row->num_unique_elements += 1;
     
-    return if_already_exsists;
+    return if_new;
 }
 
 void addFloat(Row *row, long double floating_point)

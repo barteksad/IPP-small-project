@@ -75,12 +75,18 @@ bool insertWordTree(WordTree *treePtr, Word word)
         // memory error
         if (*treePtr == NULL)
             exit(EXIT_FAILURE);
+        if (word.data_type == NOT_A_NUMBER)
+        {
+            word.not_a_number = (char *)realloc(word.not_a_number, (strlen(word.not_a_number) + 1) * sizeof(char));
+            if (word.not_a_number == NULL)
+                exit(EXIT_FAILURE);
+        }
         (*treePtr)->stored_word = word;
         (*treePtr)->stored_word.count = 1;
         (*treePtr)->left = NULL;
         (*treePtr)->right = NULL;
  
-        return false;
+        return true;
     }
 
     // how is left compared to right
@@ -93,7 +99,7 @@ bool insertWordTree(WordTree *treePtr, Word word)
     else
     {
         (*treePtr)->stored_word.count += 1;
-        return true;
+        return false;
     }
 }
 

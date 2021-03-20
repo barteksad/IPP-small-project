@@ -46,6 +46,7 @@ bool checkIfFloatingPointAndPossiblyAdd(char *word, Row *row)
     long double possiblyFloat = strtold(word, &endPtr);
     if (endPtr == word + word_len)
     {
+        // printf("%s %Ld ",word, possiblyFloat);
         addFloat(row, possiblyFloat);
         return true;
     }
@@ -65,24 +66,24 @@ bool proceedWord(Row *row, char *word)
         return addNotANumber(row, word);
     if (strcmp(word, "0x") == 0)
     {
-        addFloat(row, (long double)0);
-        return true;
+        addFloat(row, 0L);
+        return false;
     }
-
+    int word_len = strlen(word);
 
     // if it start with +/- it can be intiger/floating point or not a number
     if (word[0] == '-' || word[0] == '+')
     {
         if (!checkIfFloatingPointAndPossiblyAdd(word, row))
             return addNotANumber(row, word);
-        return true;
+        return false;
     }
-    else if (word[0] == '0')
+    else if (word[0] == '0' && word_len > 1)
         if (checkIfOctalAndPossiblyAdd(word, row))
-            return true;
+            return false;
     
     if (checkIfFloatingPointAndPossiblyAdd(word, row))
-        return true;
+        return false;
     else 
         return addNotANumber(row, word);
 }

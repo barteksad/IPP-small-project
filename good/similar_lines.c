@@ -14,7 +14,11 @@ int main()
     int current_input, previous_input = '\n';
     unsigned int row_number = 0;
     RowTree row_counter = NULL;
-    char * word = (char *)malloc(1);
+
+    size_t word_buffer_init_size = 128;
+    size_t word_buffer_size = 128;
+    size_t word_len = 0;
+    char * word = (char *)malloc(word_buffer_init_size* sizeof(char));
     word[0] = '\0';
 
     Row *row = (Row *)malloc(sizeof(Row));
@@ -25,6 +29,7 @@ int main()
     while(true) 
     {
         current_input = getc(stdin);
+
         // check if comment or invalid row :
         // either contains '#' or ascii character not in range [33, 126]
         if (((current_input == '#' && previous_input == '\n') || current_input < 33 || current_input > 126) && (!isWhitespace(current_input) && (current_input != EOF)))
@@ -41,8 +46,7 @@ int main()
             row->row_words = NULL;
             row->num_elements = 0;
             row->num_unique_elements = 0;
-            free(word);
-            word = (char *)malloc(1);
+            word_len = 0;
             word[0] = '\0';
             previous_input = '\n';
 
@@ -56,35 +60,52 @@ int main()
             if (!isWhitespace(previous_input))
             {
                 if (proceedWord(row, word))
-                    free(word);
-                word = (char *)malloc(1);
-                word[0] = '\0';                      
+                {
+                    word = (char *)malloc(word_buffer_init_size* sizeof(char));
+                    word_buffer_size = word_buffer_init_size;
+                    if (word == NULL)
+                        exit(EXIT_FAILURE);
+                }
+                word_len = 0;
+                word[0] = '\0';                     
             }
             previous_input = current_input;
             continue;
         }
         
+        // if a not whitespace character then add to word string
         if(!isWhitespace(current_input) && current_input != EOF)
         {
-            size_t len = strlen(word);
-            word = (char*)realloc(word, len + 2);
-            if (word == NULL)
-                exit(EXIT_FAILURE);
-            word[len] = (char)current_input;
-            word[len + 1] = '\0';
+            if (word_len >= word_buffer_size -1)
+            {
+                word = (char *)realloc(word, 2*word_buffer_size*sizeof(char));
+                word_buffer_size*=2;
+                if (word == NULL)
+                    exit(EXIT_FAILURE);
+            }
+            word[word_len] = (char)current_input;
+            word[word_len + 1] = '\0';
+            word_len += 1;
+            
             previous_input = current_input;
-
             continue;
         }
+
+        //
         if (current_input == '\n' ||  current_input == EOF) 
         {
             row_number += 1;
             if (!isWhitespace(previous_input))
             {
                 if (proceedWord(row, word))
-                    free(word);
-                word = (char *)malloc(1);
-                word[0] = '\0'; 
+                {
+                    word = (char *)malloc(word_buffer_init_size * sizeof(char));
+                    word_buffer_size = word_buffer_init_size;
+                    if (word == NULL)
+                        exit(EXIT_FAILURE);
+                }
+                word_len = 0;
+                word[0] = '\0';
             }
 
             if (row->num_elements > 0)
