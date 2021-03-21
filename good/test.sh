@@ -8,10 +8,13 @@ then
 fi
 
 PROGRAM_PATH=$1
+if [[ "$PROGRAM_PATH" != "./"* ]]
+then
+    PROGRAM_PATH=$"./$PROGRAM_PATH"
+fi
 TEST_DIR=$2
 
-
-for file_name in "$TEST_DIR"*.in
+for file_name in "$TEST_DIR/"*.in
 do
     TMPFILE_OUT=$(mktemp) || exit 1
     TMPFILE_ERR=$(mktemp) || exit 1

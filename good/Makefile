@@ -5,7 +5,7 @@ LDFLAGS  =
 
 .PHONY: all clean
 
-similar_lines : similar_lines.o row_counter.o row_counter.o helper_functions.o helper_functions.o row.o row.h bintree.o bintree.o
+similar_lines : similar_lines.o row_counter.o row_counter.o helper_functions.o helper_functions.o row.o bintree.o bintree.o
 
 bintree.o : bintree.c bintree.h
 

@@ -1,4 +1,3 @@
-#pragma once
 #include <stdlib.h>
 #include <stdio.h>
 #include "row_counter.h"
@@ -11,6 +10,11 @@ struct RowNode
     RowTree left, right;
 };
 
+// silimar lines count
+static int num_rows_groups = 0;
+
+// BST insert function modified to to handle RowNode
+// if element exsists, increase its count
 bool insertRowTree(RowTree *row_tree_ptr, Row *row, int row_number)
 {
 
@@ -48,7 +52,9 @@ bool insertRowTree(RowTree *row_tree_ptr, Row *row, int row_number)
     }
 }
 
-int goDFSRowTree(RowTree t, RowTree *rows_groups[], int current_num)
+// pointer array rows_group is the same length as unique elements count in t
+// current num is necessary to write each element in order
+int goDFSRowTree(RowTree t, RowTree *rows_groups, int current_num)
 {
     if (t != NULL)
     {
@@ -60,11 +66,15 @@ int goDFSRowTree(RowTree t, RowTree *rows_groups[], int current_num)
         return current_num;
 }
 
+// first element in row_numbers array is a number of first row of this similar lines group
+// so to compare two rows we just need to subtract right first row number from left first row number
 int compareRowGroups(const void *lhs, const void *rhs)
 {
     return (*(*(RowTree *)lhs)->row_numbers - *(*(RowTree *)rhs)->row_numbers);
 }
 
+// writes all elements to array calling goDFSRowTree fun
+// and sorts it with compareRowGroups predicate
 void printRows(RowTree row_counter)
 {
     RowTree *rows_gropus = (RowTree *)malloc(num_rows_groups * sizeof(RowTree));

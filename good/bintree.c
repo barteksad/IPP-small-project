@@ -1,4 +1,3 @@
-#pragma once
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -123,7 +122,7 @@ void removeAllWordTree(WordTree t)
 }
 
 
-int goDFSWordTree(WordTree t, Word *words[], int current_num)
+int goDFSWordTree(WordTree t, Word **words, int current_num)
 {
     if (t != NULL)
     {

@@ -1,4 +1,3 @@
-#pragma once
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -14,10 +13,15 @@ int main()
     int current_input, previous_input = '\n';
     unsigned int row_number = 0;
     RowTree row_counter = NULL;
+
     char * word = (char *)malloc(1);
+    if (!word)
+        exit(EXIT_FAILURE);
     word[0] = '\0';
 
     Row *row = (Row *)malloc(sizeof(Row));
+    if (!row)
+        exit(EXIT_FAILURE);
     row->num_elements = 0;
     row->num_unique_elements = 0;
     row->row_words = NULL;
@@ -43,6 +47,8 @@ int main()
             row->num_unique_elements = 0;
             free(word);
             word = (char *)malloc(1);
+            if (!word)
+                exit(EXIT_FAILURE);
             word[0] = '\0';
             previous_input = '\n';
 
@@ -58,6 +64,8 @@ int main()
                 if (proceedWord(row, word))
                     free(word);
                 word = (char *)malloc(1);
+                if (!word)
+                    exit(EXIT_FAILURE);
                 word[0] = '\0';                      
             }
             previous_input = current_input;
@@ -84,6 +92,8 @@ int main()
                 if (proceedWord(row, word))
                     free(word);
                 word = (char *)malloc(1);
+                if (!word)
+                    exit(EXIT_FAILURE);
                 word[0] = '\0'; 
             }
 
@@ -96,9 +106,10 @@ int main()
                         free(row);
                     }
                 row = (Row *)malloc(sizeof(Row));
+                if (!row)
+                    exit(EXIT_FAILURE);
                 row->num_elements = 0;
                 row->num_unique_elements = 0;
-    
                 row->row_words = NULL;
             }
             previous_input = '\n';
@@ -110,6 +121,5 @@ int main()
     removeAllRowTree(row_counter);
     free(word);
     free(row);
-
     exit(EXIT_SUCCESS);
 }

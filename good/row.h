@@ -1,4 +1,5 @@
 #pragma once
+#include <stdbool.h>
 #include "bintree.h"
 
 typedef struct Row
