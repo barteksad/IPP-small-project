@@ -1,7 +1,5 @@
-#pragma once
 #include <stdbool.h> 
 #include "row.h"
-
 
 bool addWord(Row *row, Word word)
 {

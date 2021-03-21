@@ -1,4 +1,3 @@
-#pragma once
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -15,13 +14,14 @@ int main()
     unsigned int row_number = 0;
     RowTree row_counter = NULL;
 
-    size_t word_buffer_init_size = 128;
-    size_t word_buffer_size = 128;
-    size_t word_len = 0;
-    char * word = (char *)malloc(word_buffer_init_size* sizeof(char));
+    char * word = (char *)malloc(1);
+    if (!word)
+        exit(EXIT_FAILURE);
     word[0] = '\0';
 
     Row *row = (Row *)malloc(sizeof(Row));
+    if (!row)
+        exit(EXIT_FAILURE);
     row->num_elements = 0;
     row->num_unique_elements = 0;
     row->row_words = NULL;
@@ -46,7 +46,10 @@ int main()
             row->row_words = NULL;
             row->num_elements = 0;
             row->num_unique_elements = 0;
-            word_len = 0;
+            free(word);
+            word = (char *)malloc(1);
+            if (!word)
+                exit(EXIT_FAILURE);
             word[0] = '\0';
             previous_input = '\n';
 
@@ -60,14 +63,11 @@ int main()
             if (!isWhitespace(previous_input))
             {
                 if (proceedWord(row, word))
-                {
-                    word = (char *)malloc(word_buffer_init_size* sizeof(char));
-                    word_buffer_size = word_buffer_init_size;
-                    if (word == NULL)
-                        exit(EXIT_FAILURE);
-                }
-                word_len = 0;
-                word[0] = '\0';                     
+                    free(word);
+                word = (char *)malloc(1);
+                if (!word)
+                    exit(EXIT_FAILURE);
+                word[0] = '\0';                      
             }
             previous_input = current_input;
             continue;
@@ -98,14 +98,11 @@ int main()
             if (!isWhitespace(previous_input))
             {
                 if (proceedWord(row, word))
-                {
-                    word = (char *)malloc(word_buffer_init_size * sizeof(char));
-                    word_buffer_size = word_buffer_init_size;
-                    if (word == NULL)
-                        exit(EXIT_FAILURE);
-                }
-                word_len = 0;
-                word[0] = '\0';
+                    free(word);
+                word = (char *)malloc(1);
+                if (!word)
+                    exit(EXIT_FAILURE);
+                word[0] = '\0'; 
             }
 
             if (row->num_elements > 0)
@@ -117,9 +114,10 @@ int main()
                         free(row);
                     }
                 row = (Row *)malloc(sizeof(Row));
+                if (!row)
+                    exit(EXIT_FAILURE);
                 row->num_elements = 0;
                 row->num_unique_elements = 0;
-    
                 row->row_words = NULL;
             }
             previous_input = '\n';
@@ -131,6 +129,5 @@ int main()
     removeAllRowTree(row_counter);
     free(word);
     free(row);
-
     exit(EXIT_SUCCESS);
 }
