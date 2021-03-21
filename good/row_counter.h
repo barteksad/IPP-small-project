@@ -1,5 +1,5 @@
 #pragma once
-#include "bintree.h"
+#include "word.h"
 #include "row.h"
 
 // rows are stored in BST

@@ -1,7 +1,6 @@
 #include <stdbool.h> 
 #include "row.h"
 
-
 bool addWord(Row *row, Word word)
 {
     row->num_elements += 1;

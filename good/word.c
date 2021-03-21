@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "bintree.h"
+#include "word.h"
 
 
 struct WordNode
@@ -10,7 +10,6 @@ struct WordNode
     WordTree left, right;
 };
 
-
 enum CompareResult compareWords(Word lhs_word, Word rhs_word, bool check_count)
 {   
     // different data types
@@ -18,7 +17,8 @@ enum CompareResult compareWords(Word lhs_word, Word rhs_word, bool check_count)
         return SMALLER;
     else if (lhs_word.data_type > rhs_word.data_type)
         return GREATER;
-
+    
+    // normal comparison
     else if (lhs_word.data_type ==  FLOATING_POINT)
     {
         long double lhs_value = lhs_word.floating_point;
@@ -66,6 +66,8 @@ enum CompareResult compareWords(Word lhs_word, Word rhs_word, bool check_count)
 
 }   
 
+// BST insert function modified to to handle Word
+// if element exsists, increases its count
 bool insertWordTree(WordTree *treePtr, Word word)
 {
     if (*treePtr == NULL)
@@ -121,7 +123,8 @@ void removeAllWordTree(WordTree t)
     }
 }
 
-
+// pointers array words is the same length as unique elements count in t
+// current num is necessary to write each element in order
 int goDFSWordTree(WordTree t, Word **words, int current_num)
 {
     if (t != NULL)
@@ -134,7 +137,8 @@ int goDFSWordTree(WordTree t, Word **words, int current_num)
         return current_num;
 }
 
-
+// writes all elements in each tree in order to array calling goDFSRowTree fun
+// and compares them in turn
 enum CompareResult compareTreesWordTree(WordTree t1, WordTree t2, int num_elements_in_each_tree)
 {
     Word **t1_words = malloc(num_elements_in_each_tree * sizeof(Word*));

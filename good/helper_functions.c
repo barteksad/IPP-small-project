@@ -73,10 +73,12 @@ bool proceedWord(Row *row, char *word)
 
     // hex numbers must be treated as intigers
     if (word_len > 1 && word[0] == '0' && word[1] == 'x')
+    {
         if (!checkIfFloatingPointAndPossiblyAdd(word, row, word_len, true))
             return addNotANumber(row, word);
         else
             return false;
+    }
 
     // if it start with +/- it can't be float or octal
     if (word[0] == '-' || word[0] == '+')

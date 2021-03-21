@@ -14,7 +14,7 @@ struct RowNode
 static int num_rows_groups = 0;
 
 // BST insert function modified to to handle RowNode
-// if element exsists, increase its count
+// if element exsists, increases its count
 bool insertRowTree(RowTree *row_tree_ptr, Row *row, int row_number)
 {
 
@@ -52,7 +52,7 @@ bool insertRowTree(RowTree *row_tree_ptr, Row *row, int row_number)
     }
 }
 
-// pointer array rows_group is the same length as unique elements count in t
+// pointers array rows_group is the same length as unique elements count in t
 // current num is necessary to write each element in order
 int goDFSRowTree(RowTree t, RowTree *rows_groups, int current_num)
 {
