@@ -12,12 +12,17 @@ if [[ "$PROGRAM_PATH" != "./"* ]]
 then
     PROGRAM_PATH=$"./$PROGRAM_PATH"
 fi
-TEST_DIR=$2
 
-for file_name in "$TEST_DIR/"*.in
+TEST_DIR=$2
+if [[ "$TEST_DIR" != *"/" && "$TEST_DIR" != "" ]]
+then
+    TEST_DIR=$"$TEST_DIR/"
+fi
+
+for file_name in "$TEST_DIR"*.in
 do
-    TMPFILE_OUT=$(mktemp) || exit 1
-    TMPFILE_ERR=$(mktemp) || exit 1
+    TMPFILE_OUT=$(mktemp)
+    TMPFILE_ERR=$(mktemp)
 
     "$PROGRAM_PATH"<"$file_name" >$TMPFILE_OUT 2>$TMPFILE_ERR
 
@@ -28,13 +33,22 @@ do
         
         if [[ "$DIFF_OUT" == "" ]] && [[ "$DIFF_ERR" == "" ]]
         then
-            echo "$file_name OK"
+            RESULTS="results : ok | "
         else
-            echo "$file_name zły wynik!"
+            RESULTS="results : WRONG! | "
         fi
+
+        $(`valgrind --error-exitcode=123 --leak-check=full --show-leak-kinds=all --errors-for-leak-kinds=all --log-file=/dev/null $PROGRAM_PATH<$file_name >/dev/null`)
+        if (($? == "0"))
+        then
+            RESULTS=$"$RESULTS valgrind check : ok      ${file_name#*/}"
+        else
+            RESULTS=$"$RESULTS valgrind check : WRONG, exit code = $?     ${file_name#*/}"
+        fi
+
+        echo "$RESULTS"
     else
-        echo "$file_name error, program zakoczył się z kodem $?"
-        echo $((`cat $TMPFILE_OUT`))
+        echo "$file_name ERROR!, program terminated with code $?"
     fi
     rm -f "$TMPFILE_OUT $TMPFILE_ERR"
 done;

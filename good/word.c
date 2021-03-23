@@ -142,7 +142,11 @@ int goDFSWordTree(WordTree t, Word **words, int current_num)
 enum CompareResult compareTreesWordTree(WordTree t1, WordTree t2, int num_elements_in_each_tree)
 {
     Word **t1_words = malloc(num_elements_in_each_tree * sizeof(Word*));
+    if (!t1_words)
+        exit(EXIT_FAILURE);
     Word **t2_words = malloc(num_elements_in_each_tree * sizeof(Word*));
+    if (!t2_words)
+        exit(EXIT_FAILURE);
 
     goDFSWordTree(t1, t1_words, 0);
     goDFSWordTree(t2, t2_words, 0);

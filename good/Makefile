@@ -1,6 +1,6 @@
 CC       = gcc
 CPPFLAGS =
-CFLAGS   = -Wall -Wextra -std=c11 -O2 -g
+CFLAGS   = -Wall -Wextra -std=c11 -O2
 LDFLAGS  =
 
 .PHONY: all clean

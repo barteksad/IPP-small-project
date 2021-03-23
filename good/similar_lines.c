@@ -31,7 +31,9 @@ int main()
         current_input = getc(stdin);
         // check if comment or invalid row :
         // either contains '#' or ascii character not in range [33, 126]
-        if (((current_input == '#' && previous_input == '\n') || current_input < 33 || current_input > 126) && (!isWhitespace(current_input) && (current_input != EOF)))
+        if ((
+            (current_input == '#' && previous_input == '\n') || 
+            current_input < 33 || current_input > 126) && (!isWhitespace(current_input) && (current_input != EOF)))
         {
             row_number += 1;
             if (current_input != '#')
@@ -75,8 +77,8 @@ int main()
         if(!isWhitespace(current_input) && current_input != EOF)
         {
             size_t len = strlen(word);
-            word = (char*)realloc(word, len + 2);
-            if (word == NULL)
+            word = (char *)realloc(word, len + 2);
+            if (!word)
                 exit(EXIT_FAILURE);
             word[len] = (char)current_input;
             word[len + 1] = '\0';
@@ -84,6 +86,7 @@ int main()
 
             continue;
         }
+
         if (current_input == '\n' ||  current_input == EOF) 
         {
             row_number += 1;
@@ -117,6 +120,7 @@ int main()
                     break;
         }
     }
+    
     printRows(row_counter);
     removeAllRowTree(row_counter);
     free(word);

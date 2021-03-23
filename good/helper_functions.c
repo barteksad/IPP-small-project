@@ -77,7 +77,7 @@ bool proceedWord(Row *row, char *word)
         if (!checkIfFloatingPointAndPossiblyAdd(word, row, word_len, true))
             return addNotANumber(row, word);
         else
-            return false;
+            return true;
     }
 
     // if it start with +/- it can't be float or octal

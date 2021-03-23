@@ -26,6 +26,8 @@ bool insertRowTree(RowTree *row_tree_ptr, Row *row, int row_number)
             exit(EXIT_FAILURE);
         (*row_tree_ptr)->row = row;
         (*row_tree_ptr)->row_numbers = (int *)malloc(sizeof(int));
+        if(!(*row_tree_ptr)->row_numbers)
+            exit(EXIT_FAILURE);
         *((*row_tree_ptr)->row_numbers) = row_number;
         (*row_tree_ptr)->how_many_rows_similar = 1;
         (*row_tree_ptr)->left = NULL;
@@ -44,7 +46,7 @@ bool insertRowTree(RowTree *row_tree_ptr, Row *row, int row_number)
     else
     {
         (*row_tree_ptr)->row_numbers = (int *)realloc((*row_tree_ptr)->row_numbers, sizeof(int) * ((*row_tree_ptr)->how_many_rows_similar + 1));
-        if ((*row_tree_ptr)->row_numbers == NULL)
+        if (!(*row_tree_ptr)->row_numbers)
             exit(EXIT_FAILURE);
         *((*row_tree_ptr)->row_numbers + ((*row_tree_ptr)->how_many_rows_similar)) = row_number;
         (*row_tree_ptr)->how_many_rows_similar +=1;        
@@ -78,6 +80,8 @@ int compareRowGroups(const void *lhs, const void *rhs)
 void printRows(RowTree row_counter)
 {
     RowTree *rows_gropus = (RowTree *)malloc(num_rows_groups * sizeof(RowTree));
+    if (!rows_gropus)
+        exit(EXIT_FAILURE);
     goDFSRowTree(row_counter, rows_gropus, 0);
     qsort(rows_gropus, num_rows_groups, sizeof(RowTree), compareRowGroups);
 
