@@ -8,7 +8,7 @@ bool isWhitespace (int x);
 // it returns true is added word is new and it is not a number
 // because then it's char* can't be modified
 // if we add float, the data at char* word is no longer needed
-bool proceedWord(Row *row, char *word);
+bool proceedWord(Row *row, char *word, int word_len);
 
 bool checkIfOctalAndPossiblyAdd(char *word, Row *row, int word_len);
 

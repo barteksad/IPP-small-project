@@ -12,13 +12,13 @@ typedef struct Row
 
 // return true if added word was new
 // and false if it has already been present, then just increase its count
-bool addWord(Row *row, Word word);
+bool addWord(Row *row, Word word, int word_len);
 
 // creates struc for float and calls addWord
 void addFloat(Row *row, long double floating_point);
 
 // creates struc for not a number and calls addWord
-bool addNotANumber(Row *row, char *not_a_number);
+bool addNotANumber(Row *row, char *not_a_number, int word_len);
 
 // compares two rows
 // row1 < row2 if:

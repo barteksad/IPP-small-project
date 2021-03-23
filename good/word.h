@@ -40,7 +40,7 @@ enum CompareResult compareWords(Word lhs_word, Word rhs_word, bool check_count);
 
 // return true if added word was new
 // and false if it has already been present, then just increase its count
-bool insertWordTree(WordTree *treePtr, Word word);
+bool insertWordTree(WordTree *treePtr, Word word, int word_len);
 
 void printAllWordTree(WordTree t);
 

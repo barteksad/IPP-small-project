@@ -1,10 +1,10 @@
 #include <stdbool.h> 
 #include "row.h"
 
-bool addWord(Row *row, Word word)
+bool addWord(Row *row, Word word, int word_len)
 {
     row->num_elements += 1;
-    bool if_already_exsists = insertWordTree(&row->row_words, word);
+    bool if_already_exsists = insertWordTree(&row->row_words, word, word_len);
     if (!if_already_exsists)
         row->num_unique_elements += 1;
     
@@ -16,15 +16,15 @@ void addFloat(Row *row, long double floating_point)
     Word new_word;
     new_word.data_type = FLOATING_POINT;
     new_word.floating_point = floating_point;
-    addWord(row, new_word);
+    addWord(row, new_word, -1);
 }
 
-bool addNotANumber(Row *row, char *not_a_number)
+bool addNotANumber(Row *row, char *not_a_number, int word_len)
 {
     Word new_word;
     new_word.data_type = NOT_A_NUMBER;
     new_word.not_a_number = not_a_number;
-    return addWord(row, new_word);
+    return addWord(row, new_word, word_len);
 }
 
 enum CompareResult compareTwoRows(Row row1, Row row2)

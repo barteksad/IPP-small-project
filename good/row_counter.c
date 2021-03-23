@@ -14,7 +14,7 @@ struct RowNode
 static int num_rows_groups = 0;
 
 // BST insert function modified to to handle RowNode
-// if element exsists, increases its count
+// if element exsists, increases its count and return true, alse false
 bool insertRowTree(RowTree *row_tree_ptr, Row *row, int row_number)
 {
 

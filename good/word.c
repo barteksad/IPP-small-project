@@ -68,7 +68,7 @@ enum CompareResult compareWords(Word lhs_word, Word rhs_word, bool check_count)
 
 // BST insert function modified to to handle Word
 // if element exsists, increases its count
-bool insertWordTree(WordTree *treePtr, Word word)
+bool insertWordTree(WordTree *treePtr, Word word, int word_len)
 {
     if (*treePtr == NULL)
     {
@@ -77,6 +77,17 @@ bool insertWordTree(WordTree *treePtr, Word word)
         if (*treePtr == NULL)
             exit(EXIT_FAILURE);
         (*treePtr)->stored_word = word;
+        // if word stores string, its (char *) points to (char *)word from main file
+        // we need to store it in another memory
+        if (word.data_type == NOT_A_NUMBER)
+        {
+            char *new_memory_for_stored_string = (char *)malloc((word_len + 1) * sizeof(char));
+            if (!new_memory_for_stored_string)
+                exit(EXIT_FAILURE);
+            strcpy(new_memory_for_stored_string, word.not_a_number);
+            (*treePtr)->stored_word.not_a_number = new_memory_for_stored_string;
+
+        }
         (*treePtr)->stored_word.count = 1;
         (*treePtr)->left = NULL;
         (*treePtr)->right = NULL;
@@ -88,9 +99,9 @@ bool insertWordTree(WordTree *treePtr, Word word)
     enum CompareResult compare_result = compareWords((*treePtr)->stored_word, word, false);
 
     if (compare_result == SMALLER)
-        return insertWordTree(&((*treePtr)->right), word);
+        return insertWordTree(&((*treePtr)->right), word, word_len);
     else if (compare_result == GREATER)
-        return insertWordTree(&((*treePtr)->left), word);
+        return insertWordTree(&((*treePtr)->left), word, word_len);
     else
     {
         (*treePtr)->stored_word.count += 1;
@@ -119,6 +130,7 @@ void removeAllWordTree(WordTree t)
         removeAllWordTree(t->right);
         if (t->stored_word.data_type == NOT_A_NUMBER)
             free(t->stored_word.not_a_number);
+
         free(t);
     }
 }

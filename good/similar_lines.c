@@ -7,6 +7,7 @@
 #include "row.h"
 #include "row_counter.h"
 
+#define INITIAL_WORD_BUFFER_SIZE 1024
 
 int main() 
 {
@@ -14,10 +15,11 @@ int main()
     unsigned int row_number = 0;
     RowTree row_counter = NULL;
 
-    char * word = (char *)malloc(1);
+    int current_word_buffer_size = INITIAL_WORD_BUFFER_SIZE;
+    char * word = (char *)malloc(current_word_buffer_size * sizeof(char));
     if (!word)
         exit(EXIT_FAILURE);
-    word[0] = '\0';
+    int word_len = 0;
 
     Row *row = (Row *)malloc(sizeof(Row));
     if (!row)
@@ -47,70 +49,54 @@ int main()
             row->row_words = NULL;
             row->num_elements = 0;
             row->num_unique_elements = 0;
-            free(word);
-            word = (char *)malloc(1);
-            if (!word)
-                exit(EXIT_FAILURE);
-            word[0] = '\0';
+            word_len = 0;
             previous_input = '\n';
 
             continue;
         }
 
-        if (isWhitespace(current_input) && current_input != '\n')
+        if (isWhitespace(current_input) || current_input == EOF)
         {
             // if previous character was also a whitespace nothing to do
             // if previous character wasn't a whitespace, there is new word to proceed
             if (!isWhitespace(previous_input))
             {
-                if (proceedWord(row, word))
-                    free(word);
-                word = (char *)malloc(1);
-                if (!word)
-                    exit(EXIT_FAILURE);
-                word[0] = '\0';                      
+                word[word_len] = '\0';
+                proceedWord(row, word, word_len);
+                word_len = 0;              
             }
             previous_input = current_input;
-            continue;
         }
         
         if(!isWhitespace(current_input) && current_input != EOF)
         {
-            size_t len = strlen(word);
-            word = (char *)realloc(word, len + 2);
-            if (!word)
-                exit(EXIT_FAILURE);
-            word[len] = (char)current_input;
-            word[len + 1] = '\0';
+            if (word_len > current_word_buffer_size - 1)
+            {
+                word = (char *)realloc(word, current_word_buffer_size * 2 * sizeof(char));
+                if (!word)
+                    exit(EXIT_FAILURE);
+                current_word_buffer_size *= 2;
+            }
+            word[word_len] = (char)current_input;
+            word_len += 1;
             previous_input = current_input;
-
             continue;
         }
 
         if (current_input == '\n' ||  current_input == EOF) 
         {
             row_number += 1;
-            if (!isWhitespace(previous_input))
-            {
-                if (proceedWord(row, word))
-                    free(word);
-                word = (char *)malloc(1);
-                if (!word)
-                    exit(EXIT_FAILURE);
-                word[0] = '\0'; 
-            }
-
             if (row->num_elements > 0)
             {
-                
-                    if (insertRowTree(&row_counter, row, row_number))
-                    {
-                        removeAllWordTree(row->row_words);
-                        free(row);
-                    }
-                row = (Row *)malloc(sizeof(Row));
-                if (!row)
-                    exit(EXIT_FAILURE);
+                // if true, only increase count and we don't new pointer
+                if (insertRowTree(&row_counter, row, row_number))
+                    removeAllWordTree(row->row_words);
+                else
+                {
+                    row = (Row *)malloc(sizeof(Row));
+                    if (!row)
+                        exit(EXIT_FAILURE);
+                }
                 row->num_elements = 0;
                 row->num_unique_elements = 0;
                 row->row_words = NULL;

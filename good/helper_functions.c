@@ -53,29 +53,27 @@ bool checkIfFloatingPointAndPossiblyAdd(char *word, Row *row, int word_len, bool
         return false;
 }
 
-bool proceedWord(Row *row, char *word)
+bool proceedWord(Row *row, char *word, int word_len)
 {
     // convert string to lowercase
-    for(int i = 0; word[i]; i++){
+    for(int i = 0; word[i] != '\0'; i++){
         word[i] = tolower(word[i]);
     }
 
     // special cases
     if (strcmp(word, "+nan") == 0 || strcmp(word, "-nan") == 0 || strcmp(word, "nan") == 0)
-        return addNotANumber(row, word);
+        return addNotANumber(row, word, word_len);
     if (strcmp(word, "0x") == 0)
     {
         addFloat(row, 0L);
         return true;
     }
 
-    int word_len = strlen(word);
-
     // hex numbers must be treated as intigers
     if (word_len > 1 && word[0] == '0' && word[1] == 'x')
     {
         if (!checkIfFloatingPointAndPossiblyAdd(word, row, word_len, true))
-            return addNotANumber(row, word);
+            return addNotANumber(row, word, word_len);
         else
             return true;
     }
@@ -85,9 +83,9 @@ bool proceedWord(Row *row, char *word)
     {
         // so -0x +0x (...) is not a number
         if (word_len > 2  && word[1] == '0' && word[2] == 'x')
-            return addNotANumber(row, word);
+            return addNotANumber(row, word, word_len);
         else if (!checkIfFloatingPointAndPossiblyAdd(word, row, word_len, false))
-            return addNotANumber(row, word);
+            return addNotANumber(row, word, word_len);
         return true;
     }
 
@@ -100,5 +98,5 @@ bool proceedWord(Row *row, char *word)
     if (checkIfFloatingPointAndPossiblyAdd(word, row, word_len, false))
         return true;
     else 
-        return addNotANumber(row, word);
+        return addNotANumber(row, word, word_len);
 }
