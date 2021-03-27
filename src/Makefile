@@ -5,6 +5,8 @@ LDFLAGS  =
 
 .PHONY: all clean
 
+all : similar_lines
+
 similar_lines : similar_lines.o row_counter.o row_counter.o helper_functions.o helper_functions.o row.o word.o
 
 word.o : word.c word.h

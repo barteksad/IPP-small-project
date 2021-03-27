@@ -38,7 +38,7 @@ do
             RESULTS="results : WRONG! | "
         fi
 
-        $(`valgrind --error-exitcode=123 --leak-check=full --show-leak-kinds=all --errors-for-leak-kinds=all --log-file=/dev/null $PROGRAM_PATH<$file_name >/dev/null 2>1&`)
+        $(`valgrind --error-exitcode=123 --leak-check=full --show-leak-kinds=all --errors-for-leak-kinds=all --log-file=/dev/null "$PROGRAM_PATH"<"$file_name" >/dev/null 2>1&`)
         if (($? == "0"))
         then
             RESULTS=$"$RESULTS valgrind check : ok      ${file_name#*/}"
