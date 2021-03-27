@@ -35,6 +35,7 @@ bool checkIfOctalAndPossiblyAdd(char *word, Row *row, size_t word_len)
     return false;
 }
 
+// read_hex_int jest potrzebne, żeby wykluczyć przypadek liczby niecałkowitej zapisanej w systemie szesnastkowym
 bool checkIfFloatingPointAndPossiblyAdd(char *word, Row *row, size_t word_len, bool read_hex_int)
 {
     char *endPtr;
@@ -64,14 +65,14 @@ void proceedWord(Row *row, char *word, size_t word_len)
     else if(strcmp(word, "0x") == 0)
         addFloat(row, 0L);
 
-    // jeśli słowo zaczyna się na 0x, może być tylko intem lub nie liczbą, nie dopuszczamy iczb zmiennoprzecinkowych w zapisie szesnastkowym
+    // jeśli słowo zaczyna się na 0x, może być tylko intem lub nie liczbą, nie dopuszczamy liczb zmiennoprzecinkowych w zapisie szesnastkowym
     else if (word_len > 1 && word[0] == '0' && word[1] == 'x')
     {
         if (!checkIfFloatingPointAndPossiblyAdd(word, row, word_len, true))
             addNotANumber(row, word, word_len);
     }
 
-    // jeśli zaczyna się +/- to nie może być liczbą w szesnastkową ani ósemkową
+    // jeśli zaczyna się +/- to nie może być liczbą szesnastkową ani ósemkową
     else if (word[0] == '-' || word[0] == '+')
     {
         // czyli +0x ... to słowa
