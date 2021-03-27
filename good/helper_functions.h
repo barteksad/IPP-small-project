@@ -4,12 +4,13 @@
 
 bool isWhitespace (int x);
 
-// checks if word is a number or not a number and adds it to the row
-// it returns true is added word is new and it is not a number
-// because then it's char* can't be modified
-// if we add float, the data at char* word is no longer needed
-bool proceedWord(Row *row, char *word);
+// sprawdza czy dane słowo to liczba czy nie liczba i dodaje je do aktualnego wiersza
+void proceedWord(Row *row, char *word, size_t word_len);
 
-bool checkIfOctalAndPossiblyAdd(char *word, Row *row, int word_len);
+// próbuje przeczytać dane słowo jako liczbe ósemkową i jeśli się uda, dodaje do wiersza
+// zwraca true / false czy się udało
+bool checkIfOctalAndPossiblyAdd(char *word, Row *row, size_t word_len);
 
-bool checkIfFloatingPointAndPossiblyAdd(char *word, Row *row, int word_len, bool read_hex_int);
+// próbuje przeczytać dane słowo jako liczbę szesnastkową lub zmienno przecinkową i jeśli się uda, dodaje do wiersza
+// zwraca true / false czy się udało
+bool checkIfFloatingPointAndPossiblyAdd(char *word, Row *row, size_t word_len, bool read_hex_int);

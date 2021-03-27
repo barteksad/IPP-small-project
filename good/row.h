@@ -2,7 +2,8 @@
 #include <stdbool.h>
 #include "word.h"
 
-// Row keeps stored words in a BST
+// obiekt do trzymania wierszy
+// składa się z BST na słowa, łącznej liczby słów oraz liczby unikatowych słów
 typedef struct Row
 {
     WordTree row_words;
@@ -10,19 +11,16 @@ typedef struct Row
     unsigned int num_unique_elements;
 } Row;
 
-// return true if added word was new
-// and false if it has already been present, then just increase its count
-bool addWord(Row *row, Word word);
+// dodaje słowo do BST
+void addWord(Row *row, Word word, int word_len);
 
-// creates struc for float and calls addWord
+// tworzy obiekt Word przechowójące liczbę i wywołuje addWord
 void addFloat(Row *row, long double floating_point);
 
-// creates struc for not a number and calls addWord
-bool addNotANumber(Row *row, char *not_a_number);
+// tworzy obiekt Word przechowójące nie liczbę i wywołuje addWord
+void addNotANumber(Row *row, char *not_a_number, int word_len);
 
-// compares two rows
-// row1 < row2 if:
-// num elements in row1 < num elements in row2
-// iterate : sorted words or its counts in row1 < sorted words or its counts in row2
+// porównuje dwa wiersze
+// zwraca info, jak się ma lewy do prawego 
 enum CompareResult compareTwoRows(Row row1, Row row2);
 

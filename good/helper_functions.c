@@ -23,7 +23,7 @@ bool isWhitespace (int x) {
     }
 }
 
-bool checkIfOctalAndPossiblyAdd(char *word, Row *row, int word_len)
+bool checkIfOctalAndPossiblyAdd(char *word, Row *row, size_t word_len)
 {
     char *endPtr;
     long double possiblyInt = (long double)strtoull(word, &endPtr, 8);
@@ -32,11 +32,10 @@ bool checkIfOctalAndPossiblyAdd(char *word, Row *row, int word_len)
         addFloat(row, possiblyInt);
         return true;
     }
-    else
-        return false;
+    return false;
 }
 
-bool checkIfFloatingPointAndPossiblyAdd(char *word, Row *row, int word_len, bool read_hex_int)
+bool checkIfFloatingPointAndPossiblyAdd(char *word, Row *row, size_t word_len, bool read_hex_int)
 {
     char *endPtr;
     long double possiblyFloat;
@@ -50,56 +49,62 @@ bool checkIfFloatingPointAndPossiblyAdd(char *word, Row *row, int word_len, bool
         addFloat(row, possiblyFloat);
         return true;
     }
-    else
-        return false;
+    return false;
 }
 
-bool proceedWord(Row *row, char *word)
+void proceedWord(Row *row, char *word, size_t word_len)
 {
-    // convert string to lowercase
-    for(int i = 0; word[i]; i++){
+    // konwertuje wszystkie litery na małe
+    for(int i = 0; word[i] != '\0'; i++){
         word[i] = tolower(word[i]);
     }
 
-    // special cases
+    // szczególne przypadki nie wyłapywane przez standardowe funkcje
     if (strcmp(word, "+nan") == 0 || strcmp(word, "-nan") == 0 || strcmp(word, "nan") == 0)
-        return addNotANumber(row, word);
-    if (strcmp(word, "0x") == 0)
-    {
+        addNotANumber(row, word, word_len);
+    else if(strcmp(word, "0x") == 0)
         addFloat(row, 0L);
-        return true;
-    }
 
-    int word_len = strlen(word);
-
-    // hex numbers must be treated as intigers
-    if (word_len > 1 && word[0] == '0' && word[1] == 'x')
+    // jeśli słowo zaczyna się na 0x, może być tylko intem lub nie liczbą, nie dopuszczamy iczb zmiennoprzecinkowych w zapisie szesnastkowym
+    else if (word_len > 1 && word[0] == '0' && word[1] == 'x')
     {
         if (!checkIfFloatingPointAndPossiblyAdd(word, row, word_len, true))
-            return addNotANumber(row, word);
-        else
-            return false;
+            addNotANumber(row, word, word_len);
     }
 
-    // if it start with +/- it can't be float or octal
-    if (word[0] == '-' || word[0] == '+')
+    // jeśli zaczyna się +/- to nie może być liczbą w szesnastkową ani ósemkową
+    else if (word[0] == '-' || word[0] == '+')
     {
-        // so -0x +0x (...) is not a number
+        // czyli +0x ... to słowa
         if (word_len > 2  && word[1] == '0' && word[2] == 'x')
-            return addNotANumber(row, word);
+            addNotANumber(row, word, word_len);
         else if (!checkIfFloatingPointAndPossiblyAdd(word, row, word_len, false))
+<<<<<<< HEAD
             return addNotANumber(row, word);
         return false;
+=======
+            addNotANumber(row, word, word_len);
+>>>>>>> try_buffer_again
     }
-
-    // with 0 at the beginning it can be a octal number
+    // 0 (0x itp już rozpatrzone ) na początku, może być to liczba ósemkowa
     else if (word[0] == '0')
-        if (checkIfOctalAndPossiblyAdd(word, row, word_len))
-            return true;
-    
-    // else try to read as a number if fails must be a word
-    if (checkIfFloatingPointAndPossiblyAdd(word, row, word_len, false))
-        return true;
-    else 
-        return addNotANumber(row, word);
+    {
+        if(!checkIfOctalAndPossiblyAdd(word, row, word_len))
+        {
+            // wszystkie szczególen przypadki rozpatrzone, próbujemy wczytać jako liczbę
+            // jak się nie uda, dodajemy jako nie liczbą
+            if (!checkIfFloatingPointAndPossiblyAdd(word, row, word_len, false))
+            addNotANumber(row, word, word_len);
+        }
+    }
+    else
+    {
+        // wszystkie szczególen przypadki rozpatrzone, próbujemy wczytać jako liczbę
+        // jak się nie uda, dodajemy jako nie liczbą
+        if (!checkIfFloatingPointAndPossiblyAdd(word, row, word_len, false))
+        addNotANumber(row, word, word_len);
+    }
 }
+    
+
+

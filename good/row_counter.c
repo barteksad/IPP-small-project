@@ -2,6 +2,11 @@
 #include <stdio.h>
 #include "row_counter.h"
 
+// węzeł drzewa na wiersze
+// przechowuje :
+// - reprezentanta
+// - numery podobnych wierszy posortowane rosnąca
+// - ich liczbę
 struct RowNode
 {
     Row *row;
@@ -10,11 +15,9 @@ struct RowNode
     RowTree left, right;
 };
 
-// silimar lines count
+// liczba unikatowych wierszy
 static int num_rows_groups = 0;
 
-// BST insert function modified to to handle RowNode
-// if element exsists, increases its count
 bool insertRowTree(RowTree *row_tree_ptr, Row *row, int row_number)
 {
 
@@ -26,6 +29,8 @@ bool insertRowTree(RowTree *row_tree_ptr, Row *row, int row_number)
             exit(EXIT_FAILURE);
         (*row_tree_ptr)->row = row;
         (*row_tree_ptr)->row_numbers = (int *)malloc(sizeof(int));
+        if(!(*row_tree_ptr)->row_numbers)
+            exit(EXIT_FAILURE);
         *((*row_tree_ptr)->row_numbers) = row_number;
         (*row_tree_ptr)->how_many_rows_similar = 1;
         (*row_tree_ptr)->left = NULL;
@@ -39,12 +44,12 @@ bool insertRowTree(RowTree *row_tree_ptr, Row *row, int row_number)
     enum CompareResult compare_result = compareTwoRows(*(*row_tree_ptr)->row, *row);
     if (compare_result == SMALLER)
         return insertRowTree(&((*row_tree_ptr)->right), row, row_number);
-    else if (compare_result == GREATER)
+    else if (compare_result == BIGGER)
         return insertRowTree(&((*row_tree_ptr)->left), row, row_number);
     else
     {
         (*row_tree_ptr)->row_numbers = (int *)realloc((*row_tree_ptr)->row_numbers, sizeof(int) * ((*row_tree_ptr)->how_many_rows_similar + 1));
-        if ((*row_tree_ptr)->row_numbers == NULL)
+        if (!(*row_tree_ptr)->row_numbers)
             exit(EXIT_FAILURE);
         *((*row_tree_ptr)->row_numbers + ((*row_tree_ptr)->how_many_rows_similar)) = row_number;
         (*row_tree_ptr)->how_many_rows_similar +=1;        
@@ -52,8 +57,8 @@ bool insertRowTree(RowTree *row_tree_ptr, Row *row, int row_number)
     }
 }
 
-// pointers array rows_group is the same length as unique elements count in t
-// current num is necessary to write each element in order
+// zwykłe przejście in order
+// current_num jest porzebne żemy każdy element wpisać w odpowiednie miejscie, zgodne z kolejnością in order
 int goDFSRowTree(RowTree t, RowTree *rows_groups, int current_num)
 {
     if (t != NULL)
@@ -66,18 +71,19 @@ int goDFSRowTree(RowTree t, RowTree *rows_groups, int current_num)
         return current_num;
 }
 
-// first element in row_numbers array is a number of first row of this similar lines group
-// so to compare two rows we just need to subtract right first row number from left first row number
+// nr pierwszego wiersza w lewym - nr pierwszego wiersza w prawy
 int compareRowGroups(const void *lhs, const void *rhs)
 {
     return (*(*(RowTree *)lhs)->row_numbers - *(*(RowTree *)rhs)->row_numbers);
 }
 
-// writes all elements to array calling goDFSRowTree fun
-// and sorts it with compareRowGroups predicate
+// zapisujemy podobne wiersze do tablicy
+// sortujemy je zgodnie ze specyfikacją predykatem compareRowGroups
 void printRows(RowTree row_counter)
 {
     RowTree *rows_gropus = (RowTree *)malloc(num_rows_groups * sizeof(RowTree));
+    if (!rows_gropus)
+        exit(EXIT_FAILURE);
     goDFSRowTree(row_counter, rows_gropus, 0);
     qsort(rows_gropus, num_rows_groups, sizeof(RowTree), compareRowGroups);
 
