@@ -79,12 +79,7 @@ void proceedWord(Row *row, char *word, size_t word_len)
         if (word_len > 2  && word[1] == '0' && word[2] == 'x')
             addNotANumber(row, word, word_len);
         else if (!checkIfFloatingPointAndPossiblyAdd(word, row, word_len, false))
-<<<<<<< HEAD
-            return addNotANumber(row, word);
-        return false;
-=======
             addNotANumber(row, word, word_len);
->>>>>>> try_buffer_again
     }
     // 0 (0x itp już rozpatrzone ) na początku, może być to liczba ósemkowa
     else if (word[0] == '0')

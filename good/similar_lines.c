@@ -37,18 +37,11 @@ int main()
     while(true) 
     {
         current_input = getc(stdin);
-<<<<<<< HEAD
-
-        // check if comment or invalid row :
-        // either contains '#' or ascii character not in range [33, 126]
-        if (((current_input == '#' && previous_input == '\n') || current_input < 33 || current_input > 126) && (!isWhitespace(current_input) && (current_input != EOF)))
-=======
         
         // sprawdzenie warunków, czy aktualny wiersz jest poprawny / nie jest komentarzem
         if ((
             (current_input == '#' && previous_input == '\n') || 
             current_input < 33 || current_input > 126) && (!isWhitespace(current_input) && (current_input != EOF)))
->>>>>>> try_buffer_again
         {
             row_number += 1;
             if (current_input != '#')
@@ -81,22 +74,6 @@ int main()
             previous_input = current_input;
         }
         
-<<<<<<< HEAD
-        // if a not whitespace character then add to word string
-        if(!isWhitespace(current_input) && current_input != EOF)
-        {
-            if (word_len >= word_buffer_size -1)
-            {
-                word = (char *)realloc(word, 2*word_buffer_size*sizeof(char));
-                word_buffer_size*=2;
-                if (word == NULL)
-                    exit(EXIT_FAILURE);
-            }
-            word[word_len] = (char)current_input;
-            word[word_len + 1] = '\0';
-            word_len += 1;
-            
-=======
         // jeśli aktualny input jest poprawnym, nie białym znakiem dopisujemy go do buffera na słowo i ew zwiększamy rozmiar buffera
         if(!isWhitespace(current_input) && current_input != EOF)
         {
@@ -109,16 +86,11 @@ int main()
             }
             word[word_len] = (char)current_input;
             word_len += 1;
->>>>>>> try_buffer_again
             previous_input = current_input;
             continue;
         }
 
-<<<<<<< HEAD
-        //
-=======
         // koniec wiersza / koniec pliku, dodajemy aktualny wiersz do BST przechowywującego wszystkie wiersze
->>>>>>> try_buffer_again
         if (current_input == '\n' ||  current_input == EOF) 
         {
             row_number += 1;

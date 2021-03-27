@@ -94,12 +94,7 @@ bool insertWordTree(WordTree *treePtr, Word word, int word_len)
         (*treePtr)->stored_word.count = 1;
         (*treePtr)->left = NULL;
         (*treePtr)->right = NULL;
-<<<<<<< HEAD
- 
-        return true;
-=======
         return false;
->>>>>>> try_buffer_again
     }
 
     enum CompareResult compare_result = compareWords((*treePtr)->stored_word, word, false);

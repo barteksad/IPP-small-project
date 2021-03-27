@@ -4,17 +4,9 @@
 void addWord(Row *row, Word word, int word_len)
 {
     row->num_elements += 1;
-<<<<<<< HEAD
-    bool if_new = insertWordTree(&row->row_words, word);
-    if (if_new)
-        row->num_unique_elements += 1;
-    
-    return if_new;
-=======
     bool if_already_exsists = insertWordTree(&row->row_words, word, word_len);
     if (!if_already_exsists)
         row->num_unique_elements += 1;    
->>>>>>> try_buffer_again
 }
 
 void addFloat(Row *row, long double floating_point)
