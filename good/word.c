@@ -12,13 +12,12 @@ struct WordNode
 
 enum CompareResult compareWords(Word lhs_word, Word rhs_word, bool check_count)
 {   
-    // different data types
+    // liczba < nie liczby
     if (lhs_word.data_type < rhs_word.data_type)
         return SMALLER;
     else if (lhs_word.data_type > rhs_word.data_type)
-        return GREATER;
+        return BIGGER;
     
-    // normal comparison
     else if (lhs_word.data_type ==  FLOATING_POINT)
     {
         long double lhs_value = lhs_word.floating_point;
@@ -27,13 +26,13 @@ enum CompareResult compareWords(Word lhs_word, Word rhs_word, bool check_count)
         if (lhs_value < rhs_value)
             return SMALLER;
         else if (lhs_value > rhs_value)
-            return GREATER;
+            return BIGGER;
         else if (check_count)
             {
                 if (lhs_word.count < rhs_word.count)
                     return SMALLER;
                 else if (lhs_word.count > rhs_word.count)    
-                    return GREATER;
+                    return BIGGER;
                 else    
                     return EQUAL;
             }
@@ -50,13 +49,13 @@ enum CompareResult compareWords(Word lhs_word, Word rhs_word, bool check_count)
         if (compare_info < 0)
             return SMALLER;
         else if (compare_info > 0)
-            return GREATER;
+            return BIGGER;
         else if (check_count)
             {
                 if (lhs_word.count < rhs_word.count)
                     return SMALLER;
                 else if (lhs_word.count > rhs_word.count)    
-                    return GREATER;
+                    return BIGGER;
                 else    
                     return EQUAL;
             }
@@ -66,19 +65,17 @@ enum CompareResult compareWords(Word lhs_word, Word rhs_word, bool check_count)
 
 }   
 
-// BST insert function modified to to handle Word
-// if element exsists, increases its count
+
 bool insertWordTree(WordTree *treePtr, Word word, int word_len)
 {
     if (*treePtr == NULL)
     {
         *treePtr = (WordTree)malloc(sizeof(struct WordNode));
-        // memory error
         if (*treePtr == NULL)
             exit(EXIT_FAILURE);
         (*treePtr)->stored_word = word;
-        // if word stores string, its (char *) points to (char *)word from main file
-        // we need to store it in another memory
+        // jeśli dodajemy nową nie liczbę to trzeba na jej napis zaalokować nową pamięć
+        // ponieważ aktualna jest współdzielona z bufferem na wczytywane słowa z main()
         if (word.data_type == NOT_A_NUMBER)
         {
             char *new_memory_for_stored_string = (char *)malloc((word_len + 1) * sizeof(char));
@@ -91,16 +88,14 @@ bool insertWordTree(WordTree *treePtr, Word word, int word_len)
         (*treePtr)->stored_word.count = 1;
         (*treePtr)->left = NULL;
         (*treePtr)->right = NULL;
- 
         return false;
     }
 
-    // how is left compared to right
     enum CompareResult compare_result = compareWords((*treePtr)->stored_word, word, false);
 
     if (compare_result == SMALLER)
         return insertWordTree(&((*treePtr)->right), word, word_len);
-    else if (compare_result == GREATER)
+    else if (compare_result == BIGGER)
         return insertWordTree(&((*treePtr)->left), word, word_len);
     else
     {
@@ -135,8 +130,8 @@ void removeAllWordTree(WordTree t)
     }
 }
 
-// pointers array words is the same length as unique elements count in t
-// current num is necessary to write each element in order
+// zwykłe przejście in order
+// current_num jest porzebne żemy każdy element wpisać w odpowiednie miejscie, zgodne z kolejnością in order
 int goDFSWordTree(WordTree t, Word **words, int current_num)
 {
     if (t != NULL)
@@ -149,8 +144,6 @@ int goDFSWordTree(WordTree t, Word **words, int current_num)
         return current_num;
 }
 
-// writes all elements in each tree in order to array calling goDFSRowTree fun
-// and compares them in turn
 enum CompareResult compareTreesWordTree(WordTree t1, WordTree t2, int num_elements_in_each_tree)
 {
     Word **t1_words = malloc(num_elements_in_each_tree * sizeof(Word*));

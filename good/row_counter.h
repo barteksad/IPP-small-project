@@ -2,18 +2,21 @@
 #include "word.h"
 #include "row.h"
 
-// rows are stored in BST
-// RowNode is a tree node and RowTree is a pointer to this tree
+// BST na wiersze
 struct RowNode; 
 
 typedef struct RowNode* RowTree;
 
+// dodaje do BST na wiersze
+// true - element już był, dopisujemy jego numer wiersza
+// false - dodano nowy element
 bool insertRowTree(RowTree *row_tree_ptr, Row *row, int row_number);
 
-// traverse tree in order and writes pointers to all tree elements to the array 
+// przechodzi drzewo in order i zapisuje wskałniki do wierszy w danej tablicy
 int goDFSRowTree(RowTree t, RowTree *rows_groups, int current_num);
 
-// compare function used to sort silimar lines by row number
+// predykat do sortowania podobnych wierszy zgodnie ze specyfikacją
+// wystarczy porównać nr poierwszego zapisanego wiersza w grupie
 int compareRowGroups(const void *lhs, const void *rhs);
 
 void printRows(RowTree row_counter);
