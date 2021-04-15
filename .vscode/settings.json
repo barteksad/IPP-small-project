@@ -1,6 +1,0 @@
-{
-    "files.associations": {
-        "helper_functions.h": "c",
-        "malloc.h": "c"
-    }
-}
